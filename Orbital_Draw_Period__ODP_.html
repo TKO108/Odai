@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Orbital Draw Period (ODP)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;600;700;800;900&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* 白基調 70% */
+            --bg-base: #fcfbf9;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-light: #e2e8f0;
+
+            /* 温かみのある黄色アクセント 30% */
+            --warm-yellow: #f59e0b;
+            --warm-yellow-hover: #d97706;
+            --warm-yellow-bg: #fffbe6;
+            --warm-yellow-border: #fcd34d;
+        }
+
+        body {
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        .font-en {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* スクロールバー */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #fcd34d;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--warm-yellow);
+        }
+
+        /* ベースパネル＆カード */
+        .white-panel {
+            background: #ffffff;
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04);
+        }
+
+        .white-card {
+            background: #ffffff;
+            border: 1px solid #f1f5f9;
+            border-radius: 14px;
+            transition: all 0.2s ease;
+        }
+
+        /* アクセントボタン (30%の要素) */
+        .btn-warm-yellow {
+            background-color: var(--warm-yellow);
+            color: #ffffff;
+            border: none;
+            box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-warm-yellow:hover {
+            background-color: var(--warm-yellow-hover);
+            box-shadow: 0 6px 18px rgba(245, 158, 11, 0.45);
+            transform: translateY(-1px);
+        }
+        .btn-warm-yellow:active {
+            transform: translateY(1px) scale(0.98);
+        }
+
+        /* 二次ボタン（白地に黄色枠・文字） */
+        .odp-button {
+            border: 1.5px solid var(--border-light);
+            border-radius: 12px;
+            background: #ffffff;
+            color: var(--text-main);
+            transition: all 0.2s ease;
+            touch-action: manipulation;
+        }
+        .odp-button:hover {
+            border-color: var(--warm-yellow-border);
+            background-color: var(--warm-yellow-bg);
+            color: var(--warm-yellow-hover);
+        }
+        .odp-button:active {
+            transform: scale(0.97);
+        }
+
+        /* カスタムチェックボックス */
+        input[type="checkbox"].odp-cb {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 5px;
+            background-color: #ffffff;
+            cursor: pointer;
+            position: relative;
+            display: inline-block;
+            vertical-align: middle;
+            flex-shrink: 0;
+            transition: all 0.15s ease;
+            touch-action: manipulation;
+        }
+        input[type="checkbox"].odp-cb:checked {
+            background-color: var(--warm-yellow);
+            border-color: var(--warm-yellow);
+        }
+        input[type="checkbox"].odp-cb:checked::after {
+            content: '✓';
+            color: #ffffff;
+            font-weight: 900;
+            font-size: 13px;
+            position: absolute;
+            top: -2px;
+            left: 2px;
+        }
+
+        /* 無効化（グレーアウト）表示 */
+        label.cb-label {
+            transition: all 0.15s ease;
+        }
+        label.cb-label:hover {
+            color: var(--warm-yellow-hover);
+        }
+        label.cb-label.disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+        label.cb-label.disabled:hover {
+            color: inherit;
+        }
+        label.cb-label.disabled input[type="checkbox"] {
+            cursor: not-allowed;
+            background-color: #f1f5f9;
+            border-color: #e2e8f0;
+        }
+
+        /* アニメーション */
+        @keyframes orbit-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .animate-orbit {
+            animation: orbit-spin 6s infinite linear;
+        }
+
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-in {
+            animation: fade-in-up 0.25s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen flex flex-col md:flex-row select-none overflow-hidden bg-[#fcfbf9] text-slate-800">
+
+    <!-- ===== 左側エリア (コントロールパネル - アクセント30%を活かしたヘッダー) ===== -->
+    <aside class="w-full md:w-[320px] lg:w-[360px] shrink-0 h-2/5 md:h-full flex flex-col z-10 relative bg-white border-r border-slate-200 shadow-sm">
+        
+        <!-- ヘッダー (アクセント黄色ベース) -->
+        <div class="p-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white flex flex-col gap-1 shadow-sm">
+            <div class="flex justify-between items-center">
+                <h1 class="text-xl font-black font-en tracking-tight flex items-center gap-2">
+                    <i class="fa-solid fa-atom animate-orbit text-lg"></i>
+                    <span>ODP</span>
+                </h1>
+                <div class="flex gap-1.5">
+                    <button id="btnSelectAll" class="px-2.5 py-1 text-xs font-bold text-amber-950 bg-white/90 hover:bg-white rounded-lg transition active:scale-95 shadow-sm">
+                        全選択
+                    </button>
+                    <button id="btnDeselectAll" class="px-2.5 py-1 text-xs font-bold text-amber-950 bg-white/90 hover:bg-white rounded-lg transition active:scale-95 shadow-sm">
+                        全解除
+                    </button>
+                </div>
+            </div>
+            <p class="text-[11px] font-medium text-amber-100">Orbital Draw Period - イラストお題生成</p>
+        </div>
+
+        <!-- チェックボックス群 (白70%ベース) -->
+        <div class="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/50">
+            
+            <!-- シチュエーション -->
+            <div class="white-card p-4 shadow-sm">
+                <h2 class="text-xs font-extrabold mb-3 text-amber-600 tracking-wider uppercase flex items-center gap-2 border-b border-slate-100 pb-2">
+                    <i class="fa-solid fa-compass"></i> シチュエーション
+                </h2>
+                <div class="grid grid-cols-2 gap-2.5 text-xs font-semibold text-slate-700">
+                    <label class="cb-label flex items-center gap-2 cursor-pointer" id="lbl-location">
+                        <input type="checkbox" class="elem-cb odp-cb" id="chk-location" value="場所" checked> 場所
+                    </label>
+                    <label class="cb-label flex items-center gap-2 cursor-pointer" id="lbl-time">
+                        <input type="checkbox" class="elem-cb odp-cb" id="chk-time" value="時間帯" checked> 時間帯
+                    </label>
+                    <label class="cb-label flex items-center gap-2 cursor-pointer" id="lbl-atmosphere">
+                        <input type="checkbox" class="elem-cb odp-cb" id="chk-atmosphere" value="雰囲気" checked> 雰囲気
+                    </label>
+                    <label class="cb-label flex items-center gap-2 cursor-pointer" id="lbl-weather">
+                        <input type="checkbox" class="elem-cb odp-cb" id="chk-weather" value="天気" checked> 天気
+                    </label>
+                    <label class="cb-label flex items-center gap-2 cursor-pointer" id="lbl-color">
+                        <input type="checkbox" class="elem-cb odp-cb" id="chk-color" value="テーマカラー"> テーマカラー
+                    </label>
+                    <label class="cb-label flex items-center gap-2 cursor-pointer" id="lbl-flower">
+                        <input type="checkbox" class="elem-cb odp-cb" id="chk-flower" value="花"> 花 (モチーフ)
+                    </label>
+                </div>
+            </div>
+
+            <!-- キャラクター -->
+            <div class="white-card p-4 shadow-sm">
+                <h2 class="text-xs font-extrabold mb-3 text-amber-600 tracking-wider uppercase flex items-center gap-2 border-b border-slate-100 pb-2">
+                    <i class="fa-solid fa-user-astronaut"></i> キャラクター
+                </h2>
+                <div class="grid grid-cols-2 gap-2.5 text-xs font-semibold text-slate-700">
+                    <label class="cb-label flex items-center gap-2 cursor-pointer" id="lbl-gender"><input type="checkbox" class="elem-cb odp-cb" id="chk-gender" value="性別" checked> 性別</label>
+                    <label class="cb-label flex items-center gap-2 cursor-pointer" id="lbl-age"><input type="checkbox" class="elem-cb odp-cb" id="chk-age" value="年代" checked> 年代</label>
+                    <label class="cb-label flex items-center gap-2 cursor-pointer" id="lbl-hairstyle"><input type="checkbox" class="elem-cb odp-cb" id="chk-hairstyle" value="髪型" checked> 髪型</label>
+                    <label class="cb-label flex items-center gap-2 cursor-pointer" id="lbl-haircolor"><input type="checkbox" class="elem-cb odp-cb" id="chk-haircolor" value="髪の色" checked> 髪の色</label>
+                    <label class="cb-label flex items-center gap-2 cursor-pointer" id="lbl-eyecolor"><input type="checkbox" class="elem-cb odp-cb" id="chk-eyecolor" value="目の色" checked> 目の色</label>
+                    <label class="cb-label flex items-center gap-2 cursor-pointer" id="lbl-expression"><input type="checkbox" class="elem-cb odp-cb" id="chk-expression" value="表情" checked> 表情</label>
+                    <label class="cb-label flex items-center gap-2 cursor-pointer" id="lbl-fashion"><input type="checkbox" class="elem-cb odp-cb" id="chk-fashion" value="服装" checked> 服装</label>
+                    <label class="cb-label flex items-center gap-2 cursor-pointer" id="lbl-pose"><input type="checkbox" class="elem-cb odp-cb" id="chk-pose" value="ポーズ" checked> ポーズ</label>
+                    <label class="cb-label flex items-center gap-2 cursor-pointer" id="lbl-item"><input type="checkbox" class="elem-cb odp-cb" id="chk-item" value="小物" checked> 小物</label>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- フッター Status -->
+        <div class="p-3 bg-white border-t border-slate-200 text-xs flex justify-between items-center text-slate-500 font-medium">
+            <span class="font-en text-[11px] tracking-wider text-slate-400">ORBITAL SYSTEM</span>
+            <span class="bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5 rounded text-[10px] font-semibold">White & Yellow Mode</span>
+        </div>
+    </aside>
+
+    <!-- ===== 右側メインエリア (クリーンな白基調70%) ===== -->
+    <main class="flex-1 h-3/5 md:h-full flex flex-col justify-between p-4 md:p-8 z-10 relative overflow-y-auto bg-[#fcfbf9]">
+        
+        <!-- 背景Canvas -->
+        <canvas id="cosmicCanvas" class="absolute inset-0 pointer-events-none opacity-40 z-0"></canvas>
+
+        <!-- 上部バー：タイマー & ストック -->
+        <div class="relative z-10 flex flex-wrap justify-between items-center border-b border-slate-200 pb-4 gap-3">
+            <div class="flex items-center gap-2.5">
+                <span class="bg-amber-500 text-white font-en font-black text-xs px-3 py-1 rounded-full shadow-sm">
+                    ODP CORE
+                </span>
+                <span class="text-xs font-semibold text-slate-500 hidden sm:inline">イラストお題ジェネレーター</span>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <!-- タイマー -->
+                <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm">
+                    <i class="fa-solid fa-stopwatch text-amber-500 text-sm"></i>
+                    <span id="timerDisplay" class="font-en text-sm font-bold tracking-wider text-slate-800 min-w-[48px] text-center">00:00</span>
+                    <div class="flex gap-1 border-l border-slate-200 pl-2">
+                        <button onclick="setTimer(10)" class="px-2 py-0.5 text-xs font-bold text-slate-600 hover:text-amber-600 hover:bg-amber-50 rounded transition">10分</button>
+                        <button onclick="setTimer(30)" class="px-2 py-0.5 text-xs font-bold text-slate-600 hover:text-amber-600 hover:bg-amber-50 rounded transition">30分</button>
+                        <button onclick="setTimer(60)" class="px-2 py-0.5 text-xs font-bold text-slate-600 hover:text-amber-600 hover:bg-amber-50 rounded transition">60分</button>
+                        <button id="btnTimerReset" class="ml-1 text-slate-400 hover:text-amber-600 transition">
+                            <i class="fa-solid fa-rotate-right text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ストックボタン -->
+                <button id="btnOpenStock" class="odp-button px-3.5 py-1.5 text-xs font-bold flex items-center gap-2 shadow-sm">
+                    <i class="fa-solid fa-bookmark text-amber-500"></i>
+                    <span>ストック</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- お題出力メインエリア -->
+        <div class="relative z-10 my-auto flex flex-col items-center justify-center text-center px-2 py-6">
+            
+            <div id="promptContainer" class="w-full max-w-3xl min-h-[220px] flex flex-col items-center justify-center p-6 md:p-10 white-panel relative shadow-md border-t-4 border-t-amber-500">
+                
+                <!-- 結果出力 -->
+                <div id="promptOutput" class="space-y-5 w-full">
+                    <span class="inline-block text-amber-700 text-xs font-extrabold tracking-widest font-en uppercase bg-amber-50 px-3.5 py-1 rounded-full border border-amber-200">
+                        ✦ ORBITAL PROMPT ✦
+                    </span>
+                    <p id="promptText" class="text-xl md:text-2xl lg:text-3xl font-extrabold text-slate-800 leading-relaxed tracking-wide">
+                        「お題を生成する！」ボタンを押して<br><span class="text-amber-500">アイディアを引き出そう</span>
+                    </p>
+
+                    <!-- タグ表示エリア -->
+                    <div id="elementsGrid" class="hidden mt-6 pt-5 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 text-left">
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- アクションボタンエリア -->
+            <div class="mt-8 flex flex-col items-center gap-3.5 w-full max-w-md">
+                <!-- 生成ボタン (温かみのある黄色アクセント) -->
+                <button id="btnGenerate" class="btn-warm-yellow w-full py-4 px-8 font-black text-xl md:text-2xl rounded-2xl flex items-center justify-center gap-3 cursor-pointer">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span>お題を生成する！</span>
+                </button>
+
+                <!-- 保存ボタン & トースト -->
+                <div class="flex flex-col items-center gap-2 w-full">
+                    <button id="btnSavePrompt" class="hidden odp-button w-3/4 py-2.5 px-4 text-xs font-bold text-slate-700 flex items-center justify-center gap-2 shadow-sm">
+                        <i class="fa-regular fa-star text-amber-500"></i>
+                        <span id="btnSaveText">このお題を保存する</span>
+                    </button>
+                    
+                    <div id="saveToast" class="hidden text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-300 px-3.5 py-1.5 rounded-lg animate-fade-in shadow-sm">
+                        <i class="fa-solid fa-circle-check mr-1 text-emerald-600"></i> 保存しました！
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 右下：参考リンク -->
+        <div class="relative z-10 mt-auto pt-4 border-t border-slate-200 flex flex-col sm:flex-row justify-end items-center gap-3">
+            <span class="text-xs font-semibold text-slate-400">参考キーワード検索:</span>
+            <div class="flex flex-wrap gap-2 justify-end">
+                <a id="hairSearchBtn" href="https://beauty.hotpepper.jp/catalog/" target="_blank" class="odp-button px-3.5 py-1.5 text-xs font-bold text-slate-700 flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-scissors text-amber-500"></i>
+                    <span id="hairSearchText">ホットペッパーで髪型検索</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-40"></i>
+                </a>
+                <a id="fashionSearchBtn" href="https://wear.jp/" target="_blank" class="odp-button px-3.5 py-1.5 text-xs font-bold text-slate-700 flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-shirt text-amber-500"></i>
+                    <span id="fashionSearchText">ファッションサイトで服検索</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-40"></i>
+                </a>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ===== ストックモーダル ===== -->
+    <div id="stockModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="white-panel max-w-lg w-full p-6 text-slate-800 max-h-[80vh] flex flex-col shadow-2xl border-t-4 border-t-amber-500">
+            <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
+                <h3 class="text-base font-extrabold flex items-center gap-2 text-amber-600">
+                    <i class="fa-solid fa-bookmark"></i> 保存したお題ストック
+                </h3>
+                <button id="btnCloseStock" class="text-slate-400 hover:text-slate-700 text-lg font-bold p-1 rounded-lg transition">
+                    ✕
+                </button>
+            </div>
+            <div id="stockList" class="flex-1 overflow-y-auto space-y-2.5 text-xs font-medium pr-1">
+            </div>
+        </div>
+    </div>
+
+    <!-- Script -->
+    <script>
+        // --- マスターデータ ---
+        const MASTER_DATA = {
+            "場所": ["学校の教室", "学校の屋上", "図書室", "プールサイド", "バス停", "駅のホーム", "神社", "木の上の秘密基地", "水族館の大水槽前", "駄菓子屋","古びた洋館の階段", "桜の木の下", "見晴らしのいい丘", "コンビニの駐車場", "灯台", "地下鉄の改札前", "河川敷", "森の中", "街角", "体育館","海岸線", "ひまわり畑", "廃校の廊下", "珈琲ショップ", "遊園地", "観覧車の中", "古本屋の奥の棚", "高架下", "植物園の温室", "コインランドリー","散歩道", "サイバーパンクの街頭", "湖畔", "時計塔の頂上", "レコードショップ", "武家屋敷の庭園", "大きな橋のたもと", "広場", "風車の見える丘", "巨大な書庫","地下室", "飛行機の機内", "空港の展望デッキ", "雲の上の世界", "崩れかけた遺跡", "海底都市の窓際", "宇宙船の操縦席", "月面のクレーター", "魔法の調薬室", "お菓子でできた森","天空の城のバルコニー", "巨大樹の幹の中", "竜の巣の洞窟", "クリスタルの洞窟", "異世界の市場", "精霊の宿る泉", "滅びた王国の玉座", "時計仕掛けの部屋", "スチームパンクの工房", "蒸気機関車の客席","空中庭園", "キノコの森", "豪華客船の甲板", "石畳の路地", "海賊船の甲板", "氷の宮殿", "地下迷宮の宝物庫", "廃墟の教会", "天空へ続く階段", "モデルルームの一室","自分の部屋", "ベランダ", "学習塾の自習室", "美術館の展示室", "ライブハウスのステージ", "撮影スタジオ", "美容室の鏡前", "ホテルの客室", "劇場の観客席", "病院の待合室","理科室", "美術室", "家庭科室", "放送室", "部室棟の踊り場", "学校の昇降口", "体育館のステージ裏", "校庭のベンチ", "裏山の祠", "コインパーキング","ガソリンスタンド", "高速道路のサービスエリア", "歩道橋", "ビルの屋上", "タクシーの車内", "無人駅", "踏切の前", "フェリーのデッキ", "高速バスの車内", "アクアリウムカフェ"],
+            "時間帯": ["朝", "昼", "夕方", "夜", "深夜", "明け方", "早朝", "正午", "日没", "日の出", "薄暮", "黎明", "暁", "東雲", "曙", "黄昏", "逢魔が時", "禍津時", "逢魔時", "白夜", "極夜", "丑三つ時", "子刻", "丑刻", "寅刻", "卯刻", "辰刻", "巳刻", "午刻", "未刻", "申刻", "酉刻", "戌刻", "亥刻", "草木も眠る丑三つ時", "かわたれ時", "黄昏時", "暮れ六つ", "明け六つ", "日中", "昼下がり", "宵", "宵の口", "真夜中", "未明", "夜半", "夜深し", "夜明け", "朝ぼらけ", "朝靄の刻", "夕まぐれ", "夕暮れ", "夕刻", "夕闇", "夜浅し", "小夜中", "深夜帯"],
+            "雰囲気": ["神秘的", "不気味", "ノスタルジック", "退廃的", "壮大", "緊迫感のある", "アンニュイ", "どこか懐かしい", "殺伐とした", "ユーモラス", "ファンタジー風", "殺風景", "静寂", "和やか", "ダーク", "幻想的", "メルヘンチック", "サイバーパンク風", "スチームパンク風", "物悲しい", "優雅", "荒涼とした", "不吉", "煌びやか", "シュール", "クラシカル", "ポップ", "無機質", "どこか切ない", "日常的", "ほのぼの", "緊迫した", "気品ある", "ゴシック調", "アットホーム", "重厚", "カオス", "静けさの漂う", "神秘的で厳か","切ない", "幻想的", "コミカル", "温かく穏やか", "ドラマチック", "儚い", "少し怪しげ", "どこか哀愁のある"],
+            "天気": ["晴れ", "快晴", "薄曇り", "曇り", "小雨", "大雨", "土砂降り", "ゲリラ豪雨", "通り雨", "にわか雨", "霧雨", "恵みの雨", "粉雪", "ボタン雪", "大雪", "吹雪", "みぞれ", "ひょう", "あられ", "霙", "霧", "濃霧", "靄", "ガス", "強風", "暴風", "突風", "木枯らし", "春一番", "台風", "竜巻", "雷雨", "雷鳴", "雷", "晴れ時々曇り", "曇りのち雨", "雨のち晴れ", "ピーカン", "日本晴れ", "狐の嫁入り", "空梅雨", "長雨", "秋霖", "菜種梅雨", "寒波", "熱波", "ダイヤモンドダスト"],
+            "テーマカラー": ["赤", "青", "黄", "緑", "白", "黒", "紫", "桃", "橙", "茶","水色", "黄緑", "紺", "灰", "朱色", "金", "銀", "藤色", "深緑", "山吹色","群青", "躑躅色", "鶯色", "琥珀色", "真紅", "藍色", "萌黄", "牡丹色", "茜色", "青竹色","浅葱色", "桔梗色", "瑠璃色", "薄雲鼠", "常盤色", "千歳緑", "生成り", "栗色", "小豆色", "海老茶","葡萄色", "漆黒", "純白", "天色", "勿忘草色", "露草色", "若竹色", "若草色", "苗色", "萌黄","金糸雀色", "杏色", "柿色", "珊瑚色", "長春色", "韓紅花", "撫子色", "紫苑色", "菖蒲色", "杜若色","江戸紫", "滅紫", "ワインレッド", "ターコイズ", "マゼンタ", "シアン", "ライム", "ベージュ", "カーキ", "オリーブ","チャコール", "アイボリー", "ミントグリーン", "ラベンダー", "サーモンピンク", "キャメル", "ボルドー", "コバルトブルー", "ブロンズ", "プラチナ"],
+            "花": [
+"バラ（赤）「あなたを愛してます、情熱」",
+"バラ（白）「純潔、深い尊敬」",
+"バラ（ピンク）「上品、感謝」",
+"バラ（黄）「友情、献身」",
+"ヒマワリ「憧れ、あなただけを見つめる」",
+"チューリップ（赤）「愛の告白」",
+"チューリップ（ピンク）「誠実な愛」",
+"チューリップ（黄）「名声、望みのない恋」",
+"チューリップ（紫）「不滅の愛」",
+"アジサイ「移り気、辛忍強さ、団らん」",
+
+"ガーベラ「希望、前進」",
+"ユリ（白）「純潔、威厳」",
+"サクラ「精神美、優美な女性」",
+"コスモス「乙女の真心、調和」",
+"カーネーション（赤）「母への愛」",
+"カーネーション（ピンク）「感謝の心」",
+"ダリア「華麗、気品」",
+"スズラン「再び幸せが訪れる、純粋」",
+"ネモフィラ「可憐、どこでも成功」",
+"ラベンダー「期待、沈黙」",
+
+"マーガレット「信頼、真実の愛」",
+"ポピー「慰め、思いやり」",
+"スイートピー「門出、優しい思い出」",
+"アネモネ「はかない恋、期待」",
+"キンモクセイ「謙虚、気高い人」",
+"ハイビスカス「繊細な美、新しい恋」",
+"プルメリア「気品、恵まれた人」",
+"ブーゲンビリア「情熱、あなたしか見えない」",
+"アザレア「節制、充足」",
+"アルストロメリア「持続、未来への憧れ」",
+
+"アイリス「希望、朗報」",
+"ウメ「高潔、忍耐」",
+"カメリア（ツバキ）「控えめな素晴らしさ、誇り」",
+"キキョウ「永遠の愛、誠実」",
+"クローバー（四つ葉）「幸運、約束」",
+"クレマチス「精神の美、旅人の喜び」",
+"クロッカス「切望、青春の喜び」",
+"サザンカ「ひたむきな愛、困難に打ち勝つ」",
+"シクラメン「遠慮、絆」",
+"シャクヤク「恥じらい、謙遜」",
+
+"スイレン「清純な心、信仰」",
+"スノードロップ「希望、慰め」",
+"スミレ「謙虚、誠実」",
+"ゼラニウム「尊敬、信頼」",
+"セントポーリア「小さな愛」",
+"タンポポ「愛の神託、真心の愛」",
+"デルフィニウム「清純、あなたを幸せにします」",
+"ナノハナ「快活、明るさ」",
+"ナンテン「私の愛は増すばかり、良い家庭」",
+"バーベナ「魔力、勤勉」",
+
+"シネラリア「喜び、快活」",
+"パンジー「物思い、誠実」",
+"ビオラ「誠実、少女の恋」",
+"ヒガンバナ「情熱、独立、再会」",
+"ヒース「孤独、寂しさ」",
+"ヒアシンス「控えめな愛しさ、ゲーム」",
+"フクジュソウ「幸せを掴む、永久の幸福」",
+"フリージア「親愛の情、あどけなさ」",
+"ペチュニア「あなたと一緒なら心がやわらぐ」",
+"ボケ「先駆者、平凡」",
+
+"ボタン「権威、風格」",
+"マリーゴールド「絶望、真心」",
+"ミモザ「感謝、思いやり」",
+"ミュゲ（鈴蘭）「幸福の再来」",
+"ムスカリ「失望、明るい未来」",
+"モクレン「自然への愛、持続性」",
+"ヤグルマギク「繊細、教育」",
+"ヤマブキ「気品、金運」",
+"ユーカリ「新生、再生」",
+"ラナンキュラス「魅力的、華やかな魅力」",
+
+"リンドウ「勝利、正義感」",
+"ルピナス「想像力、いつも幸せ」",
+"レモンフラワー「誠実な愛、愛の忠実」",
+"レンギョウ「期待、希望」",
+"ローダンセ「終わりのない友情」",
+"ワスレナグサ「私を忘れないで、真実の愛」",
+"オリーブ「平和、知恵」",
+"カモミール「逆境に耐える、親交」",
+"カスミソウ「清らかな心、無邪気」",
+"ブルースター「幸福な愛、信じあう心」"],
+
+            "性別": ["男", "女"],
+            "年代": ["10代前半", "10代後半",
+"20代前半", "20代後半",
+"30代前半", "30代後半",
+"40代前半", "40代後半",
+"50代前半", "50代後半",
+"60代前半", "60代後半",
+"70代前半", "70代後半",
+"80代前半", "80代後半",
+"90代前半", "90代後半"],
+            
+"髪型_男": ["マッシュショート", "ツーブロックショート", "センターパートショート", "スパイラルパーマショート", "ツイストスパイラルマッシュ", "ウルフカット", "ショートウルフ", "レイヤーボブ", "ハンサムマッシュ", "ベリーショート",
+"ソフトモヒカン", "アップバングショート", "ナチュラルマッシュ", "シースルーバングマッシュ", "カルマヘア", "クラウドマッシュ", "コンマヘア", "ウルフボブ", "ジェットモヒカン", "フェードカット",
+"クロップスタイル", "スキンフェード", "ツーブロックマッシュ", "波巻きパーマショート", "ツイスパボブ", "ミディアムボブ", "グラデーションボブ", "王道束感ショート", "無造作ショート", "ナチュラルショート",
+"前髪長めマッシュ", "重めマッシュ", "軽めマッシュ", "センターパートボブ", "スパイラルボブ", "ツイストパーマショート", "ニュアンスパーマショート", "エアリーショート", "アシメショート", "ウルフスパイラル",
+"ミディアムウルフ", "ロングヘア", "マンバン（おだんご）", "ポニーテール", "ハーフアップ", "ドレッドヘア", "ツイストブレイズ", "アフロ", "坊主（ボウズ）", "ベリーショートフェード",
+"サイドパートショート", "七三分けショート", "オールバック", "ネオ七三", "スリックバック", "リーゼント", "ポンパドール", "ツーブロックウルフ", "シャギーショート", "ウルフボブパーマ",
+"ベリーショートモヒカン", "テクノカット", "マッシュウルフ", "センターパートウルフ", "韓国風カルマパーマ", "韓国風シースルーマッシュ", "ガイルヘア", "シークレットパーマショート", "シャドウパーマ", "リップサービスボブ",
+"ミディアムレイヤー", "肩上ボブ", "鎖骨ミディアム", "ウルフロング", "ウルフパーマ", "スパイラルロング", "ツイストロング", "ナチュラルロング", "ワンサイドショート", "アシメマッシュ",
+"ショートボブ", "ラウンドマッシュ", "スクエアマッシュ", "ボウルカット", "タッセルボブ", "ウルフショートパーマ", "ハードスパイラルショート", "ツイストマッシュ", "ランダムパーマショート", "スモーキーパーマ",
+"センターパートスパイラル", "センターパートツイスト", "かき上げショート", "かき上げミディアム", "ハイサイドフェード", "ローサイドフェード", "ミッドフェード", "テーパーフェード", "バズカット", "クルーカット"],
+            
+"髪型_女": ["ショートボブ", "ボブ", "ミディアムボブ", "ロングボブ（ロブ）", "ショートカット", "ベリーショート", "ハンサムショート", "マッシュボブ", "ウルフカット", "ショートウルフ",
+"ミディアムレイヤー", "セミロング", "ロングヘア", "スーパーロング", "姫カット", "シースルーバングショート", "パッツンボブ", "切りっぱなしボブ", "タッセルボブ", "ワンレンボブ",
+"レイヤーロング", "ゆるふわパーマ", "ウェーブヘア", "スパイラルパーマ", "外ハネボブ", "内巻きボブ", "かき上げロング", "センターパートボブ", "ポニーテール", "ツインテール",
+"ハーフアップ", "お団子（シニヨン）", "三つ編み", "編み込み", "フィッシュボーン", "サイドポニーテール", "エビ編み", "ツインお団子", "ハーフアップお団子", "ローポニーテール"],
+           
+ "髪型_共通": ["ショートボブ", "ボブ", "ミディアムボブ", "ロングボブ（ロブ）", "ショートカット", "ベリーショート", "ハンサムショート", "マッシュボブ", "ウルフカット", "ショートウルフ",
+"ミディアムレイヤー", "セミロング", "ロングヘア", "スーパーロング", "姫カット", "シースルーバングショート", "パッツンボブ", "切りっぱなしボブ", "タッセルボブ", "ワンレンボブ",
+"レイヤーロング", "ゆるふわパーマ", "ウェーブヘア", "スパイラルパーマ", "外ハネボブ", "内巻きボブ", "かき上げロング", "センターパートボブ", "ポニーテール", "ツインテール",
+"ハーフアップ", "お団子（シニヨン）", "三つ編み", "編み込み", "フィッシュボーン", "サイドポニーテール", "エビ編み", "ツインお団子", "ハーフアップお団子", "ローポニーテール","マッシュショート", "ツーブロックショート", "センターパートショート", "スパイラルパーマショート", "ツイストスパイラルマッシュ", "ウルフカット", "ショートウルフ", "レイヤーボブ", "ハンサムマッシュ", "ベリーショート",
+"ソフトモヒカン", "アップバングショート", "ナチュラルマッシュ", "シースルーバングマッシュ", "カルマヘア", "クラウドマッシュ", "コンマヘア", "ウルフボブ", "ジェットモヒカン", "フェードカット",
+"クロップスタイル", "スキンフェード", "ツーブロックマッシュ", "波巻きパーマショート", "ツイスパボブ", "ミディアムボブ", "グラデーションボブ", "王道束感ショート", "無造作ショート", "ナチュラルショート",
+"前髪長めマッシュ", "重めマッシュ", "軽めマッシュ", "センターパートボブ", "スパイラルボブ", "ツイストパーマショート", "ニュアンスパーマショート", "エアリーショート", "アシメショート", "ウルフスパイラル",
+"ミディアムウルフ", "ロングヘア", "マンバン（おだんご）", "ポニーテール", "ハーフアップ", "ドレッドヘア", "ツイストブレイズ", "アフロ", "坊主（ボウズ）", "ベリーショートフェード",
+"サイドパートショート", "七三分けショート", "オールバック", "ネオ七三", "スリックバック", "リーゼント", "ポンパドール", "ツーブロックウルフ", "シャギーショート", "ウルフボブパーマ",
+"ベリーショートモヒカン", "テクノカット", "マッシュウルフ", "センターパートウルフ", "韓国風カルマパーマ", "韓国風シースルーマッシュ", "ガイルヘア", "シークレットパーマショート", "シャドウパーマ", "リップサービスボブ",
+"ミディアムレイヤー", "肩上ボブ", "鎖骨ミディアム", "ウルフロング", "ウルフパーマ", "スパイラルロング", "ツイストロング", "ナチュラルロング", "ワンサイドショート", "アシメマッシュ",
+"ショートボブ", "ラウンドマッシュ", "スクエアマッシュ", "ボウルカット", "タッセルボブ", "ウルフショートパーマ", "ハードスパイラルショート", "ツイストマッシュ", "ランダムパーマショート", "スモーキーパーマ",
+"センターパートスパイラル", "センターパートツイスト", "かき上げショート", "かき上げミディアム", "ハイサイドフェード", "ローサイドフェード", "ミッドフェード", "テーパーフェード", "バズカット", "クルーカット"],
+
+"髪の色": ["黒色", "茶色", "焦げ茶色", "金色", "銀色", "白色", "赤色", "青色", "緑色", "紫色",
+"ピンク色", "水色", "オレンジ色", "黄緑色", "紺色", "灰色", "ラベンダー色", "アッシュグレー色", "ミルクティー色", "ベージュ色",
+"ピンクベージュ色", "オリーブ色", "ボルドー色", "ワインレッド色", "ターコイズ色", "ネイビー色", "サーモンピンク色", "ローズゴールド色", "プラチナブロンド色", "インディゴ色",
+"栗色", "亜麻色", "茜色", "藤色", "琥珀色", "瑠璃色", "墨色", "紅褐色", "萌黄色", "ヤマブキ色","黒色（インナーピンク色）", "茶色（インナー金色）", "焦げ茶色（インナー赤色）", "金色（インナー紫色）", "銀色（インナー青色）",
+"白色（インナー黒色）", "黒色（インナー水色）", "アッシュグレー色（インナーラベンダー色）", "ミルクティー色（インナーオレンジ色）", "ベージュ色（インナー緑色）",
+"紺色（インナー銀色）", "ボルドー色（インナー金色）", "黒色（インナー緑色）", "茶色（インナーターコイズ色）", "プラチナブロンド色（インナーピンク色）",
+"灰色（インナーワインレッド色）", "オリーブ色（インナーイエロー色）", "黒色（インナーホワイト色）", "ラベンダー色（インナーピンク色）", "ネイビー色（インナー浅葱色）"],
+         
+ "目の色": ["赤色", "青色", "黄色", "緑色", "紫色", "桃色", "橙色", "茶色", "水色", "黄緑色",
+"紺色", "灰色", "黒色", "白色", "金色", "銀色", "琥珀色", "翡翠色", "瑠璃色", "紅褐色",
+"オリーブ色", "ヘーゼル色", "ターコイズ色", "ラベンダー色", "アメジスト色", "アクアブルー色", "ワインレッド色", "オパール色", "オニキス色", "オッドアイ（左右非対称）"],
+            
+"表情": ["笑った",
+"引きつった",
+"困った",
+"ドヤ",
+"キョトンとした",
+"渋い",
+"真",
+"澄ました",
+"怒った",
+"泣き",
+"照れた",
+"ぽかんとした",
+"企んだ",
+"虚無の",
+"怪訝な",
+"神妙な",
+"呆れた",
+"満面の笑みを浮かべた",
+"ニヤリとした",
+"思いつめた",
+"驚いた",
+"誇らしげな",
+"浮かない",
+"屈託のない",
+"どこか寂しげな",
+"寝ぼけた",
+"真剣な",
+"不機嫌そうな",
+"清々しい",
+"恍惚とした"],
+            "服装": ["メイド服", "宇宙服", "白衣（医師・研究員）", "ナース服", "執事服", "警察官の制服", "軍服", "消防士の服", "パイロットスーツ", "コック服・シェフ服",
+"パティシエ服", "探偵のコート", "修道服（シスター服）", "巫女装束", "神父服・聖職者の衣", "魔法使いのローブ", "騎士の鎧・甲冑", "王族・貴族のドレス", "海賊の衣装", "サーカス団員の衣装",
+"怪盗のスーツ", "忍者装束", "侍の着物・袴", "ウェイトレス服", "バーテンダーの衣装", "整備士のつなぎ", "レーサーのライダースーツ", "キャビンアテンダント（CA）の制服", "フライトアテンダント", "事務員・オフィスワーカーのスーツ",
+"ダンス衣装", "アイドルのステージ衣装", "ミュージシャンのライブ衣装", "バレリーナのチュチュ", "マジシャンのタキシード", "探検家・サファリ服", "ダイビングスーツ", "スキーウェア", "スポーツのユニフォーム", "審判服",
+"バーガーショップの制服", "カフェの店員服", "書店員の文庫エプロン", "花屋のエプロン姿", "清掃員の作業服", "警備員・ガードマンの制服", "郵便配達員の制服", "電車の運転士・車掌の制服", "バスガイドの制服", "ホテルのドアマン衣装","サンタクロース衣装", "バニーガール衣装", "チャイナドレス", "チアリーダー衣装", "水着", "パジャマ・ルームウェア", "体操着（ジャージ）", "スクール水着", "和服（着物・振袖）", "浴衣",
+"ドレス（カクテルドレス）", "ウェディングドレス", "タキシード", "喪服", "法衣・袈裟", "チマチョゴリ", "アオザイ", "サリー", "ポンチョ", "民族衣装（ディアンドル等）",
+"サーファーのラッシュガード", "ライフセーバーの服", "登山服・トレッキングウェア", "フィギュアスケートの衣装", "剣道着・道道着", "弓道着", "空手・柔道着", "ボクサーのトランクス", "プロレスラーの衣装", "乗馬服",
+"サーカス・空中ブランコ衣装", "ピエロ（クラウン）の衣装", "ピエロ風サーカス衣装", "吟遊詩人の服", "錬金術師の服", "木こり・樵の服", "鉱夫・炭鉱夫の作業着", "漁士の合羽・作業着", "農家・農作業着", "ガードマンの制服",
+"警備員の制服", "考古学者の服", "学者・教授のガウン", "学生服（学ラン）", "セーラー服", "ブレザー制服", "チェック柄ブレザー", "幼稚園・保育園の園児服", "児童の黄色い帽子と服", "ベビードール"],
+            "ポーズ": ["振り返って", "歩いて", "走って", "座って", "しゃがんで", "寝そべって", "ジャンプして", "手を振って", "腕を組んで", "手をつないで",
+"頬杖をついて", "首をかしげて", "ウインクして", "両手を広げて", "ピースして", "指をさして", "髪をかき上げて", "スカートの裾を掴んで", "ポケットに手を入れて", "壁に寄りかかって",
+"背伸びをして", "あくびをして", "うつむいて", "空を見上げて", "手で顔を覆って", "拳を突き上げて", "頭の後ろで手を組んで", "前屈みになって", "地面に絵を描いて", "肘をついて",
+"踊って", "刀を構えて", "銃を構えて", "弓を引いて", "魔法を唱えて", "本を読んで", "スマホを眺めて", "飲み物を飲んで", "傘をさして", "風に煽られて"],
+            "小物": ["スマホ", "鍵束", "懐中時計", "メガネ", "サングラス", "イヤホン", "ヘッドホン", "ビニール傘", "折りたたみ傘", "日傘",
+"文庫本", "ノート", "万年筆", "スケッチブック", "ペンケース", "レザーの財布", "ポーチ", "コインケース", "定期入れ", "トートバッグ",
+"リュックサック", "クラッチバッグ", "ショルダーバッグ", "ハンドバッグ", "旅行カバン", "水筒", "タンブラー", "マグカップ", "ティーカップ", "ガラス瓶",
+"指輪", "ネックレス", "ピアス", "ブレスレット", "ヘアピン", "ヘアゴム", "リボン", "腕時計", "懐中電灯", "ライター",
+"マッチ箱", "ハンカチ", "手袋", "マフラー", "ストール", "帽子（ベレー帽）", "帽子（ニット帽）", "帽子（キャップ）", "扇子", "うちわ",
+"コンパクトミラー", "リップクリーム", "香水瓶", "ハンドクリーム", "カメラ", "フィルムカメラ", "双眼鏡", "ルーペ", "ランタン", "キャンドル",
+"鍵（アンティーク風）", "宝箱", "トランプ", "サイコロ", "チェスの駒", "ぬいぐるみ", "ハーバリウム", "ドライフラワーの束", "一輪挿しの花瓶", "タロットカード",
+"ゲーム機", "カセットテープ", "レコード盤", "ポータブルプレイヤー", "缶バッジ", "アクリルキーホルダー", "絵の具とパレット", "画筆", "包帯", "眼帯",
+"ヘッドドレス", "チョーカー", "サスペンダー", "革ベルト", "懐中薬箱", "魔法の杖", "魔導書", "羊皮紙の巻物", "羅針盤（コンパス）", "天球儀"]
+        };
+
+        /* ==========================================
+           排他選択（自動制限）ロジック
+        ========================================== */
+        const chkLocation = document.getElementById('chk-location');
+        const chkTime = document.getElementById('chk-time');
+        const chkWeather = document.getElementById('chk-weather');
+        const chkAtmosphere = document.getElementById('chk-atmosphere');
+        const chkColor = document.getElementById('chk-color');
+        const chkFlower = document.getElementById('chk-flower');
+        const chkHairstyle = document.getElementById('chk-hairstyle');
+        const chkHaircolor = document.getElementById('chk-haircolor');
+
+        function updateExclusionRules(triggerKey) {
+            const isColor = chkColor.checked;
+            const isFlower = chkFlower.checked;
+            const isLoc = chkLocation.checked;
+            const isTime = chkTime.checked;
+            const isAtmosphere = chkAtmosphere.checked;
+            const isHairstyle = chkHairstyle.checked;
+
+            // ① 髪型と髪色の依存連動：髪型が選択されていなければ髪色は強制無効化
+            if (!isHairstyle) {
+                setCheckboxState('haircolor', false);
+            } else {
+                setCheckboxState('haircolor', true);
+            }
+
+            // ② テーマカラーが選ばれたら：その他のシチュエーションを選択不可に
+            if (triggerKey === 'color' && isColor) {
+                setCheckboxState('location', false);
+                setCheckboxState('time', false);
+                setCheckboxState('atmosphere', false);
+                setCheckboxState('weather', false);
+                setCheckboxState('flower', false);
+                return;
+            }
+
+            // ③ 花が選ばれたら：その他のシチュエーションを選択不可に
+            if (triggerKey === 'flower' && isFlower) {
+                setCheckboxState('location', false);
+                setCheckboxState('time', false);
+                setCheckboxState('atmosphere', false);
+                setCheckboxState('weather', false);
+                setCheckboxState('color', false);
+                return;
+            }
+
+            // ④ 場所が選ばれている場合 ➔ テーマカラーと花を自動無効化
+            if (isLoc) {
+                setCheckboxState('color', false);
+                setCheckboxState('flower', false);
+            } else if (!isColor && !isFlower) {
+                setCheckboxState('color', true);
+                setCheckboxState('flower', true);
+            }
+
+            // ⑤ 場所・時間帯・雰囲気の連動ルール
+            if (isLoc && isTime) {
+                setCheckboxState('atmosphere', false);
+            } else if (isLoc && isAtmosphere) {
+                setCheckboxState('time', false);
+                setCheckboxState('weather', false);
+            } else if (!isColor && !isFlower) {
+                setCheckboxState('location', true);
+                setCheckboxState('time', true);
+                setCheckboxState('atmosphere', true);
+                setCheckboxState('weather', true);
+            }
+        }
+
+        function setCheckboxState(idKey, enabled) {
+            const chk = document.getElementById(`chk-${idKey}`);
+            const lbl = document.getElementById(`lbl-${idKey}`);
+            if (!chk || !lbl) return;
+
+            if (!enabled) {
+                chk.checked = false;
+                chk.disabled = true;
+                lbl.classList.add('disabled');
+            } else {
+                chk.disabled = false;
+                lbl.classList.remove('disabled');
+            }
+        }
+
+        // 各チェックボックスの監視登録
+        [chkLocation, chkTime, chkWeather, chkAtmosphere, chkColor, chkFlower, chkHairstyle].forEach(chk => {
+            chk.addEventListener('change', (e) => {
+                const key = e.target.id.replace('chk-', '');
+                updateExclusionRules(key);
+            });
+        });
+
+        // 全選択 / 全解除
+        document.getElementById('btnSelectAll').addEventListener('click', () => {
+            document.querySelectorAll('.elem-cb').forEach(cb => {
+                if (!cb.disabled) cb.checked = true;
+            });
+            updateExclusionRules();
+        });
+
+        document.getElementById('btnDeselectAll').addEventListener('click', () => {
+            document.querySelectorAll('.elem-cb').forEach(cb => {
+                cb.checked = false;
+            });
+            updateExclusionRules();
+        });
+
+        // 初期実行
+        updateExclusionRules();
+
+        /* ==========================================
+           お題生成処理（特定定型文接続ロジック）
+        ========================================== */
+        let currentGeneratedPrompt = "";
+
+        document.getElementById('btnGenerate').addEventListener('click', () => {
+            const selectedData = {};
+
+            // 1. 性別の抽選（男 / 女）
+            if (document.getElementById('chk-gender').checked) {
+                selectedData['性別'] = MASTER_DATA["性別"][Math.floor(Math.random() * MASTER_DATA["性別"].length)];
+            }
+
+            // 2. 髪型の抽選（性別専用フィルタリング）
+            if (document.getElementById('chk-hairstyle').checked) {
+                let hairPool = MASTER_DATA["髪型_共通"];
+                if (selectedData['性別'] === '男') hairPool = MASTER_DATA["髪型_男"];
+                if (selectedData['性別'] === '女') hairPool = MASTER_DATA["髪型_女"];
+                selectedData['髪型'] = hairPool[Math.floor(Math.random() * hairPool.length)];
+            }
+
+            // 3. その他一般項目の抽選
+            const otherKeys = [
+                { id: 'location', name: '場所' },
+                { id: 'time', name: '時間帯' },
+                { id: 'atmosphere', name: '雰囲気' },
+                { id: 'weather', name: '天気' },
+                { id: 'color', name: 'テーマカラー' },
+                { id: 'flower', name: '花' },
+                { id: 'age', name: '年代' },
+                { id: 'haircolor', name: '髪の色' },
+                { id: 'eyecolor', name: '目の色' },
+                { id: 'expression', name: '表情' },
+                { id: 'fashion', name: '服装' },
+                { id: 'pose', name: 'ポーズ' },
+                { id: 'item', name: '小物' }
+            ];
+
+            otherKeys.forEach(k => {
+                const chk = document.getElementById(`chk-${k.id}`);
+                if (chk && chk.checked && !chk.disabled && MASTER_DATA[k.name]) {
+                    const arr = MASTER_DATA[k.name];
+                    selectedData[k.name] = arr[Math.floor(Math.random() * arr.length)];
+                }
+            });
+
+            if (Object.keys(selectedData).length === 0) {
+                alert("要素を少なくとも1つ以上選択してください！");
+                return;
+            }
+
+            // --- 指定接続語による文章構築 ---
+            let resultSentence = "";
+
+            // シチュエーション前半の判定
+            let situationPart = "";
+            if (selectedData['雰囲気'] && selectedData['場所']) {
+                // 【場所、雰囲気を選んだ時】
+                situationPart = `「${selectedData['雰囲気']}」な「${selectedData['場所']}」で、`;
+            } else if (selectedData['時間帯'] && selectedData['天気'] && selectedData['場所']) {
+                // 【場所、天気、時間帯を選んだ時】
+                situationPart = `「${selectedData['時間帯']}」、「${selectedData['天気']}」の「${selectedData['場所']}」で、`;
+            } else {
+                // 単体選択時のフォールバック構成
+                const sitArr = [];
+                if (selectedData['場所']) sitArr.push(`「${selectedData['場所']}」で`);
+                if (selectedData['時間帯']) sitArr.push(`「${selectedData['時間帯']}」`);
+                if (selectedData['天気']) sitArr.push(`「${selectedData['天気']}」の`);
+                if (selectedData['雰囲気']) sitArr.push(`「${selectedData['雰囲気']}」な`);
+                situationPart = sitArr.join('') ? sitArr.join('') + '、' : '';
+            }
+
+            // キャラクター部分の接続語構築
+            let fashionPart = selectedData['服装'] ? `「${selectedData['服装']}」を身に着けている` : '';
+            let itemPart = selectedData['小物'] ? `「${selectedData['小物']}」を持った` : '';
+            let haircolorPart = selectedData['髪の色'] ? `「${selectedData['髪の色']}」の` : '';
+            let hairstylePart = selectedData['髪型'] ? `「${selectedData['髪型']}」の` : '';
+            let eyecolorPart = selectedData['目の色'] ? `「${selectedData['目の色']}」の目の、` : '';
+            let expressionPart = selectedData['表情'] ? `「${selectedData['表情']}」顔をしてる` : '';
+            let posePart = selectedData['ポーズ'] ? `「${selectedData['ポーズ']}」いる` : '';
+            let agePart = selectedData['年代'] ? `「${selectedData['年代']}」くらいの` : '';
+            let genderPart = selectedData['性別'] ? `「${selectedData['性別']}」の` : '';
+
+            // 本文結合
+            resultSentence = `${situationPart}${fashionPart}${itemPart}${haircolorPart}${hairstylePart}${eyecolorPart}${expressionPart}${posePart}${agePart}${genderPart}子を描こう！`;
+
+            // 【テーマカラー、花を選んだ時】 ➔ 文末に添える
+            const extraSupplements = [];
+            if (selectedData['テーマカラー']) extraSupplements.push(`テーマカラー: ${selectedData['テーマカラー']}`);
+            if (selectedData['花']) extraSupplements.push(`モチーフ: ${selectedData['花']}`);
+
+            if (extraSupplements.length > 0) {
+                resultSentence += ` （${extraSupplements.join(' / ')}）`;
+            }
+
+            currentGeneratedPrompt = resultSentence;
+            document.getElementById('promptText').innerHTML = resultSentence;
+
+            // タググリッド描画
+            renderElementsGrid(selectedData);
+
+            // 保存ボタン表示
+            const btnSave = document.getElementById('btnSavePrompt');
+            const btnSaveText = document.getElementById('btnSaveText');
+            btnSave.classList.remove('hidden');
+            btnSave.disabled = false;
+            btnSaveText.textContent = "このお題を保存する";
+            document.getElementById('saveToast').classList.add('hidden');
+
+            // 検索リンク更新
+            updateSearchLinks(selectedData);
+        });
+
+        function renderElementsGrid(elements) {
+            const grid = document.getElementById('elementsGrid');
+            grid.innerHTML = '';
+            
+            Object.entries(elements).forEach(([key, val]) => {
+                const tag = document.createElement('div');
+                tag.className = 'p-2 bg-amber-50/80 border border-amber-200 rounded-xl text-xs font-semibold flex flex-col';
+                tag.innerHTML = `<span class="text-[10px] text-amber-700 font-bold uppercase">${key}</span><span class="text-slate-800 font-extrabold truncate">${val}</span>`;
+                grid.appendChild(tag);
+            });
+            grid.classList.remove('hidden');
+        }
+
+        function updateSearchLinks(elements) {
+            const hairText = document.getElementById('hairSearchText');
+            const hairBtn = document.getElementById('hairSearchBtn');
+            const fashionText = document.getElementById('fashionSearchText');
+            const fashionBtn = document.getElementById('fashionSearchBtn');
+
+            const hairQuery = [elements["性別"], elements["髪型"]].filter(Boolean).join(" ");
+            if (hairQuery) {
+                hairText.textContent = `『${hairQuery}』を検索`;
+                hairBtn.href = `https://beauty.hotpepper.jp/catalog/search/?keyword=${encodeURIComponent(hairQuery)}`;
+            }
+
+            const fashionQuery = [elements["性別"], elements["服装"]].filter(Boolean).join(" ");
+            if (fashionQuery) {
+                fashionText.textContent = `『${fashionQuery}』を検索`;
+                fashionBtn.href = `https://wear.jp/category/?tag_id=${encodeURIComponent(fashionQuery)}`;
+            }
+        }
+
+        /* ==========================================
+           ストック管理
+        ========================================== */
+        let stocks = JSON.parse(localStorage.getItem('ODP_PROMPT_STOCKS') || '[]');
+
+        document.getElementById('btnSavePrompt').addEventListener('click', () => {
+            const btnSave = document.getElementById('btnSavePrompt');
+            const btnSaveText = document.getElementById('btnSaveText');
+            const saveToast = document.getElementById('saveToast');
+
+            if (currentGeneratedPrompt && !stocks.includes(currentGeneratedPrompt)) {
+                stocks.push(currentGeneratedPrompt);
+                localStorage.setItem('ODP_PROMPT_STOCKS', JSON.stringify(stocks));
+                
+                btnSaveText.textContent = "✅ 保存済み";
+                btnSave.disabled = true;
+
+                saveToast.classList.remove('hidden');
+                setTimeout(() => {
+                    saveToast.classList.add('hidden');
+                }, 3000);
+            }
+        });
+
+        const stockModal = document.getElementById('stockModal');
+        document.getElementById('btnOpenStock').addEventListener('click', () => {
+            renderStocks();
+            stockModal.classList.remove('hidden');
+        });
+        document.getElementById('btnCloseStock').addEventListener('click', () => {
+            stockModal.classList.add('hidden');
+        });
+
+        function renderStocks() {
+            const list = document.getElementById('stockList');
+            if (stocks.length === 0) {
+                list.innerHTML = '<p class="text-xs text-slate-400 py-8 text-center font-semibold">保存されたお題はありません。</p>';
+                return;
+            }
+            list.innerHTML = stocks.map((item, idx) => `
+                <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex justify-between items-center gap-2">
+                    <p class="font-bold text-xs text-slate-700 flex-1 leading-relaxed">${item}</p>
+                    <button onclick="copyStock(${idx}, this)" class="text-slate-600 hover:text-amber-600 text-xs px-2.5 py-1 font-bold transition flex items-center gap-1 rounded bg-white border border-slate-200 shadow-sm">
+                        <i class="fa-regular fa-copy"></i> コピー
+                    </button>
+                    <button onclick="deleteStock(${idx})" class="text-slate-400 hover:text-red-500 text-xs px-2 py-1 font-bold transition">
+                        ✕
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        window.copyStock = function(idx, btnEl) {
+            const textToCopy = stocks[idx];
+            
+            // iOS Safari対応クリップボードコピー処理
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    showCopySuccess(btnEl);
+                }).catch(() => {
+                    fallbackCopyTextToClipboard(textToCopy, btnEl);
+                });
+            } else {
+                fallbackCopyTextToClipboard(textToCopy, btnEl);
+            }
+        };
+
+        function fallbackCopyTextToClipboard(text, btnEl) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.opacity = "0";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showCopySuccess(btnEl);
+            } catch (err) {
+                console.error('コピー失敗:', err);
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function showCopySuccess(btnEl) {
+            const originalText = btnEl.innerHTML;
+            btnEl.innerHTML = '<i class="fa-solid fa-check text-emerald-600"></i> 完了';
+            setTimeout(() => {
+                btnEl.innerHTML = originalText;
+            }, 1500);
+        }
+
+        window.deleteStock = function(idx) {
+            stocks.splice(idx, 1);
+            localStorage.setItem('ODP_PROMPT_STOCKS', JSON.stringify(stocks));
+            renderStocks();
+        };
+
+        /* ==========================================
+           ワンドロタイマー
+        ========================================== */
+        let timerInterval;
+        let timeLeft = 0;
+
+        window.setTimer = function(minutes) {
+            clearInterval(timerInterval);
+            timeLeft = minutes * 60;
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    updateTimerDisplay();
+                } else {
+                    clearInterval(timerInterval);
+                    alert(`⏰ ${minutes}分が経過しました！お疲れ様でした！`);
+                }
+            }, 1000);
+        };
+
+        document.getElementById('btnTimerReset').addEventListener('click', () => {
+            clearInterval(timerInterval);
+            timeLeft = 0;
+            updateTimerDisplay();
+        });
+
+        function updateTimerDisplay() {
+            const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+            const s = (timeLeft % 60).toString().padStart(2, '0');
+            document.getElementById('timerDisplay').textContent = `${m}:${s}`;
+        }
+
+        /* ==========================================
+           背景：Canvas 軌道描画 (淡い黄色の軌道ライン)
+        ========================================== */
+        const canvas = document.getElementById('cosmicCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        let angle = 0;
+        function drawOrbitalCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const centerX = canvas.width * 0.85;
+            const centerY = canvas.height * 0.25;
+            
+            ctx.save();
+            ctx.translate(centerX, centerY);
+            
+            ctx.strokeStyle = '#f59e0b';
+            ctx.lineWidth = 1.5;
+            ctx.globalAlpha = 0.2;
+            ctx.beginPath();
+            ctx.ellipse(0, 0, 200, 80, angle * 0.2, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.strokeStyle = '#fcd34d';
+            ctx.lineWidth = 1;
+            ctx.globalAlpha = 0.25;
+            ctx.beginPath();
+            ctx.ellipse(0, 0, 290, 120, -angle * 0.1, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.fillStyle = '#f59e0b';
+            ctx.globalAlpha = 0.4;
+            for (let i = 0; i < 12; i++) {
+                const rad = (i * 30 + angle * 20) * (Math.PI / 180);
+                const x = Math.cos(rad) * 200;
+                const y = Math.sin(rad) * 80;
+                ctx.beginPath();
+                ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            ctx.restore();
+
+            angle += 0.004;
+            requestAnimationFrame(drawOrbitalCanvas);
+        }
+        drawOrbitalCanvas();
+    </script>
+</body>
+</html>
