@@ -838,13 +838,13 @@
             const hairQuery = [elements["性別"], elements["髪型"]].filter(Boolean).join(" ");
             if (hairQuery) {
                 hairText.textContent = `『${hairQuery}』を検索`;
-                hairBtn.href = `https://beauty.hotpepper.jp/catalog/search/?keyword=${encodeURIComponent(hairQuery)}`;
+                hairBtn.href = `https://www.yahoo.co.jp${encodeURIComponent(hairQuery)}`;
             }
 
             const fashionQuery = [elements["性別"], elements["服装"]].filter(Boolean).join(" ");
             if (fashionQuery) {
                 fashionText.textContent = `『${fashionQuery}』を検索`;
-                fashionBtn.href = `https://wear.jp/category/?tag_id=${encodeURIComponent(fashionQuery)}`;
+                fashionBtn.href = `https://www.yahoo.co.jp${encodeURIComponent(fashionQuery)}`;
             }
         }
 
