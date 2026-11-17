@@ -1,276 +1,221 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ODP | Orbital Draw Period</title>
-  <link rel="icon" href="icon.png" type="image/png">
-  <link rel="apple-touch-icon" href="icon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&family=Outfit:wght@600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ODP | Orbital Draw Period</title>
+    <!-- ファビコン・Webアイコン設定 -->
+    <link rel="icon" href="icon.png" type="image/png">
+    <link rel="apple-touch-icon" href="icon.png">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;600;700;800;900&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <!-- 外部CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="h-screen w-screen overflow-hidden flex flex-col md:flex-row">
 
-  <header class="app-header">
-    <div class="header-inner">
-      <div class="brand">
-        <span class="brand-badge">ODP</span>
-        <div>
-          <h1>Orbital Draw Period</h1>
-          <p class="subtitle">イラストお題ジェネレーター</p>
+<!-- ===== 左側エリア (コントロールパネル - アクセント30%を活かしたヘッダー) ===== -->
+<aside class="w-full md:w-[320px] lg:w-[360px] shrink-0 h-2/5 md:h-full flex flex-col z-10 relative bg-white border-r border-slate-200 shadow-sm">
+    
+    <!-- ヘッダー (アクセント黄色ベース) -->
+    <div class="p-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white flex flex-col gap-1 shadow-sm">
+        <div class="flex justify-between items-center">
+            <h1 class="text-xl font-black font-en tracking-tight flex items-center gap-2">
+                <i class="fa-solid fa-atom animate-orbit text-lg"></i>
+                <span>ODP</span>
+            </h1>
+            <div class="flex gap-1.5">
+                <button id="btnSelectAll" class="px-2.5 py-1 text-xs font-bold text-amber-950 bg-white/90 hover:bg-white rounded-lg transition active:scale-95 shadow-sm">
+                    全選択
+                </button>
+                <button id="btnDeselectAll" class="px-2.5 py-1 text-xs font-bold text-amber-950 bg-white/90 hover:bg-white rounded-lg transition active:scale-95 shadow-sm">
+                    全解除
+                </button>
+            </div>
         </div>
-      </div>
-      <div class="header-actions">
-        <button id="stockToggleBtn" class="btn-outline" aria-label="ストック一覧を開く">
-          <span>📌 ストック</span>
-          <span id="stockCountBadge" class="badge-count">0</span>
-        </button>
-      </div>
+        <p class="text-[11px] font-medium text-amber-100">Orbital Draw Period - イラストお題生成</p>
     </div>
-  </header>
 
-  <main class="container">
-    <!-- メインコントロール -->
-    <section class="control-panel card">
-      <div class="control-top">
-        <button id="generateAllBtn" class="btn-primary-large">
-          <span class="btn-icon">✨</span> すべてのお題を抽選する
-        </button>
-      </div>
-      <div class="control-sub">
-        <label class="toggle-label">
-          <input type="checkbox" id="exclusionToggle" checked>
-          <span class="toggle-slider"></span>
-          <span class="toggle-text">矛盾防止ルール（例：真夏×厚手コート除外）</span>
-        </label>
-        <div class="sub-buttons">
-          <button id="copyAllBtn" class="btn-secondary">📋 まとめてコピー</button>
-          <button id="saveStockBtn" class="btn-secondary">📌 ストック保存</button>
+    <!-- チェックボックス群 (白70%ベース) -->
+    <div class="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/50">
+        
+        <!-- シチュエーション -->
+        <div class="white-card p-4 shadow-sm">
+            <h2 class="text-xs font-extrabold mb-3 text-amber-600 tracking-wider uppercase flex items-center gap-2 border-b border-slate-100 pb-2">
+                <i class="fa-solid fa-compass"></i> シチュエーション
+            </h2>
+            <div class="grid grid-cols-2 gap-2.5 text-xs font-semibold text-slate-700">
+                <label class="cb-label flex items-center gap-2 cursor-pointer" id="lbl-location">
+                    <input type="checkbox" class="elem-cb odp-cb" id="chk-location" value="場所" checked> 場所
+                </label>
+                <label class="cb-label flex items-center gap-2 cursor-pointer" id="lbl-time">
+                    <input type="checkbox" class="elem-cb odp-cb" id="chk-time" value="時間帯" checked> 時間帯
+                </label>
+                <label class="cb-label flex items-center gap-2 cursor-pointer" id="lbl-atmosphere">
+                    <input type="checkbox" class="elem-cb odp-cb" id="chk-atmosphere" value="雰囲気" checked> 雰囲気
+                </label>
+                <label class="cb-label flex items-center gap-2 cursor-pointer" id="lbl-weather">
+                    <input type="checkbox" class="elem-cb odp-cb" id="chk-weather" value="天気" checked> 天気
+                </label>
+                <label class="cb-label flex items-center gap-2 cursor-pointer" id="lbl-color">
+                    <input type="checkbox" class="elem-cb odp-cb" id="chk-color" value="テーマカラー"> テーマカラー
+                </label>
+                <label class="cb-label flex items-center gap-2 cursor-pointer" id="lbl-flower">
+                    <input type="checkbox" class="elem-cb odp-cb" id="chk-flower" value="花"> 花 (モチーフ)
+                </label>
+            </div>
         </div>
-      </div>
-    </section>
 
-    <!-- ワンドロタイマー -->
-    <section class="timer-panel card">
-      <div class="timer-header">
-        <span class="section-title">⏱️ ワンドロ・スピードペイントタイマー</span>
-        <div class="timer-presets">
-          <button class="preset-btn" data-min="15">15分</button>
-          <button class="preset-btn" data-min="30">30分</button>
-          <button class="preset-btn active" data-min="60">60分</button>
-          <button class="preset-btn" data-min="90">90分</button>
+        <!-- キャラクター -->
+        <div class="white-card p-4 shadow-sm">
+            <h2 class="text-xs font-extrabold mb-3 text-amber-600 tracking-wider uppercase flex items-center gap-2 border-b border-slate-100 pb-2">
+                <i class="fa-solid fa-user-astronaut"></i> キャラクター
+            </h2>
+            <div class="grid grid-cols-2 gap-2.5 text-xs font-semibold text-slate-700">
+                <label class="cb-label flex items-center gap-2 cursor-pointer" id="lbl-gender"><input type="checkbox" class="elem-cb odp-cb" id="chk-gender" value="性別" checked> 性別</label>
+                <label class="cb-label flex items-center gap-2 cursor-pointer" id="lbl-age"><input type="checkbox" class="elem-cb odp-cb" id="chk-age" value="年代" checked> 年代</label>
+                <label class="cb-label flex items-center gap-2 cursor-pointer" id="lbl-hairstyle"><input type="checkbox" class="elem-cb odp-cb" id="chk-hairstyle" value="髪型" checked> 髪型</label>
+                <label class="cb-label flex items-center gap-2 cursor-pointer" id="lbl-haircolor"><input type="checkbox" class="elem-cb odp-cb" id="chk-haircolor" value="髪の色" checked> 髪の色</label>
+                <label class="cb-label flex items-center gap-2 cursor-pointer" id="lbl-eyecolor"><input type="checkbox" class="elem-cb odp-cb" id="chk-eyecolor" value="目の色" checked> 目の色</label>
+                <label class="cb-label flex items-center gap-2 cursor-pointer" id="lbl-expression"><input type="checkbox" class="elem-cb odp-cb" id="chk-expression" value="表情" checked> 表情</label>
+                <label class="cb-label flex items-center gap-2 cursor-pointer" id="lbl-fashion"><input type="checkbox" class="elem-cb odp-cb" id="chk-fashion" value="服装" checked> 服装</label>
+                <label class="cb-label flex items-center gap-2 cursor-pointer" id="lbl-pose"><input type="checkbox" class="elem-cb odp-cb" id="chk-pose" value="ポーズ" checked> ポーズ</label>
+                <label class="cb-label flex items-center gap-2 cursor-pointer" id="lbl-item"><input type="checkbox" class="elem-cb odp-cb" id="chk-item" value="小物" checked> 小物</label>
+            </div>
         </div>
-      </div>
-      <div class="timer-body">
-        <div id="timerDisplay" class="timer-display">60:00</div>
-        <div class="timer-controls">
-          <button id="timerStartBtn" class="btn-accent">スタート</button>
-          <button id="timerResetBtn" class="btn-ghost">リセット</button>
-        </div>
-      </div>
-    </section>
 
-    <!-- お題カードグリッド -->
-    <section class="cards-grid" id="cardsGrid">
-      <!-- 世界観・シチュエーション -->
-      <div class="topic-card" data-key="location">
-        <div class="card-header">
-          <span class="card-category">🌍 場所・背景</span>
-          <div class="card-actions">
-            <button class="icon-btn lock-btn" title="ロック切替" aria-label="場所をロック">🔓</button>
-            <button class="icon-btn reroll-btn" title="個別再抽選" aria-label="場所を再抽選">🎲</button>
-          </div>
-        </div>
-        <div class="card-value" id="val-location">---</div>
-      </div>
-
-      <div class="topic-card" data-key="time">
-        <div class="card-header">
-          <span class="card-category">🕒 時間帯</span>
-          <div class="card-actions">
-            <button class="icon-btn lock-btn" title="ロック切替" aria-label="時間帯をロック">🔓</button>
-            <button class="icon-btn reroll-btn" title="個別再抽選" aria-label="時間帯を再抽選">🎲</button>
-          </div>
-        </div>
-        <div class="card-value" id="val-time">---</div>
-      </div>
-
-      <div class="topic-card" data-key="weather">
-        <div class="card-header">
-          <span class="card-category">🌤️ 天気・季節感</span>
-          <div class="card-actions">
-            <button class="icon-btn lock-btn" title="ロック切替" aria-label="天気をロック">🔓</button>
-            <button class="icon-btn reroll-btn" title="個別再抽選" aria-label="天気を再抽選">🎲</button>
-          </div>
-        </div>
-        <div class="card-value" id="val-weather">---</div>
-      </div>
-
-      <div class="topic-card" data-key="atmosphere">
-        <div class="card-header">
-          <span class="card-category">💫 雰囲気・ライティング</span>
-          <div class="card-actions">
-            <button class="icon-btn lock-btn" title="ロック切替" aria-label="雰囲気をロック">🔓</button>
-            <button class="icon-btn reroll-btn" title="個別再抽選" aria-label="雰囲気を再抽選">🎲</button>
-          </div>
-        </div>
-        <div class="card-value" id="val-atmosphere">---</div>
-      </div>
-
-      <div class="topic-card" data-key="theme">
-        <div class="card-header">
-          <span class="card-category">📖 テーマ・物語性</span>
-          <div class="card-actions">
-            <button class="icon-btn lock-btn" title="ロック切替" aria-label="テーマをロック">🔓</button>
-            <button class="icon-btn reroll-btn" title="個別再抽選" aria-label="テーマを再抽選">🎲</button>
-          </div>
-        </div>
-        <div class="card-value" id="val-theme">---</div>
-      </div>
-
-      <div class="topic-card" data-key="flower">
-        <div class="card-header">
-          <span class="card-category">💐 モチーフ花・花言葉</span>
-          <div class="card-actions">
-            <button class="icon-btn lock-btn" title="ロック切替" aria-label="花をロック">🔓</button>
-            <button class="icon-btn reroll-btn" title="個別再抽選" aria-label="花を再抽選">🎲</button>
-          </div>
-        </div>
-        <div class="card-value" id="val-flower">---</div>
-      </div>
-
-      <!-- キャラクター基本 -->
-      <div class="topic-card" data-key="gender">
-        <div class="card-header">
-          <span class="card-category">👤 性別・タイプ</span>
-          <div class="card-actions">
-            <button class="icon-btn lock-btn" title="ロック切替" aria-label="性別をロック">🔓</button>
-            <button class="icon-btn reroll-btn" title="個別再抽選" aria-label="性別を再抽選">🎲</button>
-          </div>
-        </div>
-        <div class="card-value" id="val-gender">---</div>
-      </div>
-
-      <div class="topic-card" data-key="age">
-        <div class="card-header">
-          <span class="card-category">🎂 年齢感</span>
-          <div class="card-actions">
-            <button class="icon-btn lock-btn" title="ロック切替" aria-label="年齢感をロック">🔓</button>
-            <button class="icon-btn reroll-btn" title="個別再抽選" aria-label="年齢感を再抽選">🎲</button>
-          </div>
-        </div>
-        <div class="card-value" id="val-age">---</div>
-      </div>
-
-      <!-- 髪型・髪色（Safari検索連携付き） -->
-      <div class="topic-card" data-key="hairstyle">
-        <div class="card-header">
-          <span class="card-category">✂️ 髪型</span>
-          <div class="card-actions">
-            <button class="icon-btn lock-btn" title="ロック切替" aria-label="髪型をロック">🔓</button>
-            <button class="icon-btn reroll-btn" title="個別再抽選" aria-label="髪型を再抽選">🎲</button>
-          </div>
-        </div>
-        <div class="card-value" id="val-hairstyle">---</div>
-        <div class="card-footer">
-          <a id="searchHairBtn" href="#" target="_blank" rel="noopener noreferrer" class="safari-search-link">
-            🧭 Safariで髪型を検索
-          </a>
-        </div>
-      </div>
-
-      <div class="topic-card" data-key="haircolor">
-        <div class="card-header">
-          <span class="card-category">🎨 髪色・インナーカラー</span>
-          <div class="card-actions">
-            <button class="icon-btn lock-btn" title="ロック切替" aria-label="髪色をロック">🔓</button>
-            <button class="icon-btn reroll-btn" title="個別再抽選" aria-label="髪色を再抽選">🎲</button>
-          </div>
-        </div>
-        <div class="card-value" id="val-haircolor">---</div>
-      </div>
-
-      <div class="topic-card" data-key="eyecolor">
-        <div class="card-header">
-          <span class="card-category">👁️ 瞳の色・特徴</span>
-          <div class="card-actions">
-            <button class="icon-btn lock-btn" title="ロック切替" aria-label="瞳をロック">🔓</button>
-            <button class="icon-btn reroll-btn" title="個別再抽選" aria-label="瞳を再抽選">🎲</button>
-          </div>
-        </div>
-        <div class="card-value" id="val-eyecolor">---</div>
-      </div>
-
-      <div class="topic-card" data-key="expression">
-        <div class="card-header">
-          <span class="card-category">😊 表情</span>
-          <div class="card-actions">
-            <button class="icon-btn lock-btn" title="ロック切替" aria-label="表情をロック">🔓</button>
-            <button class="icon-btn reroll-btn" title="個別再抽選" aria-label="表情を再抽選">🎲</button>
-          </div>
-        </div>
-        <div class="card-value" id="val-expression">---</div>
-      </div>
-
-      <!-- 服装（Safari検索連携付き） -->
-      <div class="topic-card" data-key="fashion">
-        <div class="card-header">
-          <span class="card-category">👗 服装・衣装デザイン</span>
-          <div class="card-actions">
-            <button class="icon-btn lock-btn" title="ロック切替" aria-label="服装をロック">🔓</button>
-            <button class="icon-btn reroll-btn" title="個別再抽選" aria-label="服装を再抽選">🎲</button>
-          </div>
-        </div>
-        <div class="card-value" id="val-fashion">---</div>
-        <div class="card-footer">
-          <a id="searchFashionBtn" href="#" target="_blank" rel="noopener noreferrer" class="safari-search-link">
-            🧭 Safariで服装を検索
-          </a>
-        </div>
-      </div>
-
-      <div class="topic-card" data-key="pose">
-        <div class="card-header">
-          <span class="card-category">🤸 ポーズ・構図</span>
-          <div class="card-actions">
-            <button class="icon-btn lock-btn" title="ロック切替" aria-label="ポーズをロック">🔓</button>
-            <button class="icon-btn reroll-btn" title="個別再抽選" aria-label="ポーズを再抽選">🎲</button>
-          </div>
-        </div>
-        <div class="card-value" id="val-pose">---</div>
-      </div>
-
-      <div class="topic-card" data-key="prop">
-        <div class="card-header">
-          <span class="card-category">🎒 小物・持ち物</span>
-          <div class="card-actions">
-            <button class="icon-btn lock-btn" title="ロック切替" aria-label="小物をロック">🔓</button>
-            <button class="icon-btn reroll-btn" title="個別再抽選" aria-label="小物を再抽選">🎲</button>
-          </div>
-        </div>
-        <div class="card-value" id="val-prop">---</div>
-      </div>
-    </section>
-  </main>
-
-  <!-- ストックドロワー（モーダル） -->
-  <div id="stockModal" class="modal-backdrop hidden">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>📌 保存したお題ストック</h2>
-        <button id="closeStockBtn" class="icon-btn" aria-label="閉じる">✕</button>
-      </div>
-      <div id="stockList" class="stock-list">
-        <p class="empty-msg">まだストックされたお題はありません。</p>
-      </div>
     </div>
-  </div>
 
-  <!-- トースト通知 -->
-  <div id="toast" class="toast hidden">コピーしました！</div>
+    <!-- フッター Status -->
+    <div class="p-3 bg-white border-t border-slate-200 text-xs flex justify-between items-center text-slate-500 font-medium">
+        <span class="font-en text-[11px] tracking-wider text-slate-400">ORBITAL SYSTEM</span>
+        <span class="bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5 rounded text-[10px] font-semibold">White & Yellow Mode</span>
+    </div>
+</aside>
 
-  <script src="script.js"></script>
+<!-- ===== 右側メインエリア (クリーンな白基調70%) ===== -->
+<main class="flex-1 h-3/5 md:h-full flex flex-col justify-between p-4 md:p-8 z-10 relative overflow-y-auto bg-[#fcfbf9]">
+    
+    <!-- 背景Canvas -->
+    <canvas id="cosmicCanvas" class="absolute inset-0 pointer-events-none opacity-40 z-0"></canvas>
+
+    <!-- 上部バー：タイマー & ストック -->
+    <div class="relative z-10 flex flex-wrap justify-between items-center border-b border-slate-200 pb-4 gap-3">
+        <div class="flex items-center gap-2.5">
+            <span class="bg-amber-500 text-white font-en font-black text-xs px-3 py-1 rounded-full shadow-sm">
+                ODP CORE
+            </span>
+            <span class="text-xs font-semibold text-slate-500 hidden sm:inline">イラストお題ジェネレーター</span>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <!-- タイマー -->
+            <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm">
+                <i class="fa-solid fa-stopwatch text-amber-500 text-sm"></i>
+                <span id="timerDisplay" class="font-en text-sm font-bold tracking-wider text-slate-800 min-w-[48px] text-center">00:00</span>
+                <div class="flex gap-1 border-l border-slate-200 pl-2">
+                    <button onclick="setTimer(10)" class="px-2 py-0.5 text-xs font-bold text-slate-600 hover:text-amber-600 hover:bg-amber-50 rounded transition">10分</button>
+                    <button onclick="setTimer(30)" class="px-2 py-0.5 text-xs font-bold text-slate-600 hover:text-amber-600 hover:bg-amber-50 rounded transition">30分</button>
+                    <button onclick="setTimer(60)" class="px-2 py-0.5 text-xs font-bold text-slate-600 hover:text-amber-600 hover:bg-amber-50 rounded transition">60分</button>
+                    <button id="btnTimerReset" class="ml-1 text-slate-400 hover:text-amber-600 transition">
+                        <i class="fa-solid fa-rotate-right text-xs"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ストックボタン -->
+            <button id="btnOpenStock" class="odp-button px-3.5 py-1.5 text-xs font-bold flex items-center gap-2 shadow-sm">
+                <i class="fa-solid fa-bookmark text-amber-500"></i>
+                <span>ストック</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- お題出力メインエリア -->
+    <div class="relative z-10 my-auto flex flex-col items-center justify-center text-center px-2 py-6">
+        
+        <div id="promptContainer" class="w-full max-w-3xl min-h-[220px] flex flex-col items-center justify-center p-6 md:p-10 white-panel relative shadow-md border-t-4 border-t-amber-500">
+            
+            <!-- 結果出力 -->
+            <div id="promptOutput" class="space-y-5 w-full">
+                <span class="inline-block text-amber-700 text-xs font-extrabold tracking-widest font-en uppercase bg-amber-50 px-3.5 py-1 rounded-full border border-amber-200">
+                    ✦ ORBITAL PROMPT ✦
+                </span>
+                <p id="promptText" class="text-xl md:text-2xl lg:text-3xl font-extrabold text-slate-800 leading-relaxed tracking-wide">
+                    「お題を生成する！」ボタンを押して<br><span class="text-amber-500">アイディアを引き出そう</span>
+                </p>
+
+                <!-- タグ表示エリア -->
+                <div id="elementsGrid" class="hidden mt-6 pt-5 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 text-left">
+                </div>
+            </div>
+
+        </div>
+
+        <!-- アクションボタンエリア -->
+        <div class="mt-8 flex flex-col items-center gap-3.5 w-full max-w-md">
+            <!-- 生成ボタン (温かみのある黄色アクセント) -->
+            <button id="btnGenerate" class="btn-warm-yellow w-full py-4 px-8 font-black text-xl md:text-2xl rounded-2xl flex items-center justify-center gap-3 cursor-pointer">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <span>お題を生成する！</span>
+            </button>
+
+            <!-- 保存ボタン & トースト -->
+            <div class="flex flex-col items-center gap-2 w-full">
+                <button id="btnSavePrompt" class="hidden odp-button w-3/4 py-2.5 px-4 text-xs font-bold text-slate-700 flex items-center justify-center gap-2 shadow-sm">
+                    <i class="fa-regular fa-star text-amber-500"></i>
+                    <span id="btnSaveText">このお題を保存する</span>
+                </button>
+                
+                <div id="saveToast" class="hidden text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-300 px-3.5 py-1.5 rounded-lg animate-fade-in shadow-sm">
+                    <i class="fa-solid fa-circle-check mr-1 text-emerald-600"></i> 保存しました！
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 右下：参考リンク（Safari検索に変更） -->
+    <div class="relative z-10 mt-auto pt-4 border-t border-slate-200 flex flex-col sm:flex-row justify-end items-center gap-3">
+        <span class="text-xs font-semibold text-slate-400">参考キーワード検索:</span>
+        <div class="flex flex-wrap gap-2 justify-end">
+            <a id="hairSearchBtn" href="https://www.google.com/search?q=%E9%AB%AA%E5%9E%8B" target="_blank" rel="noopener noreferrer" class="odp-button px-3.5 py-1.5 text-xs font-bold text-slate-700 flex items-center gap-1.5 shadow-sm">
+                <i class="fa-solid fa-scissors text-amber-500"></i>
+                <span id="hairSearchText">Safariで髪型検索</span>
+                <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-40"></i>
+            </a>
+            <a id="fashionSearchBtn" href="https://www.google.com/search?q=%E6%9C%8D%E8%A3%85" target="_blank" rel="noopener noreferrer" class="odp-button px-3.5 py-1.5 text-xs font-bold text-slate-700 flex items-center gap-1.5 shadow-sm">
+                <i class="fa-solid fa-shirt text-amber-500"></i>
+                <span id="fashionSearchText">Safariで服検索</span>
+                <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-40"></i>
+            </a>
+        </div>
+    </div>
+
+</main>
+
+<!-- ===== ストックモーダル ===== -->
+<div id="stockModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="white-panel max-w-lg w-full p-6 text-slate-800 max-h-[80vh] flex flex-col shadow-2xl border-t-4 border-t-amber-500">
+        <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
+            <h3 class="text-base font-extrabold flex items-center gap-2 text-amber-600">
+                <i class="fa-solid fa-bookmark"></i> 保存したお題ストック
+            </h3>
+            <button id="btnCloseStock" class="text-slate-400 hover:text-slate-700 text-lg font-bold p-1 rounded-lg transition">
+                ✕
+            </button>
+        </div>
+        <div id="stockList" class="flex-1 overflow-y-auto space-y-2.5 text-xs font-medium pr-1">
+        </div>
+    </div>
+</div>
+
+<!-- 外部JavaScript -->
+<script src="script.js"></script>
 </body>
 </html>

@@ -1,472 +1,658 @@
-// マスターデータ定義
+
+// --- マスターデータ ---
 const MASTER_DATA = {
-  location: [
-    "雨上がりの路地裏", "アンティーク図書館", "海辺の無人駅", "ネオン輝くサイバー都市",
-    "廃墟となった温室", "雲の上の天文台", "夕暮れの屋上フェンス前", "ランタンが灯る夜市場",
-    "深海のガラス張りカフェ", "雪化粧の神社境内", "歯車が回る時計塔の内部", "桜吹雪の通学路",
-    "ステンドグラスの聖堂", "霧に包まれた森の湖畔", "レトロな純喫茶の窓際", "星空が見えるキャンプ場",
-    "空中庭園のバルコニー", "夏祭りの提灯通り", "枯れ葉舞う秋の並木道", "魔法薬学の実験室"
-  ],
-  time: [
-    "夜明け前（ブルーアワー）", "朝日が差し込む早朝", "爽やかな午前中", "真昼の強い日差し",
-    "傾き始めた午後", "燃えるような夕暮れ（マジックアワー）", "黄昏時（逢魔が時）",
-    "月明かりの深夜", "ネオンが滲む真夜中", "時間停止したような白昼"
-  ],
-  weather: [
-    "快晴・入道雲", "穏やかな春風", "しとしと降る雨", "激しい雷雨・稲妻",
-    "雨上がりの虹", "舞い散る粉雪", "吹雪", "幻想的な朝霧",
-    "流星群の夜空", "真夏の陽炎", "秋晴れの澄んだ空", "花びらが舞う強風"
-  ],
-  atmosphere: [
-    "ドラマチックな逆光", "ノスタルジック・セピア調", "透明感あふれる爽やかさ",
-    "ミステリアス・退廃的", "幻想的・ファンタジー", "サイバーパンク・近未来",
-    "温かみのある日常感", "静謐で切ない空気感", "ポップでカラフル", "ゴシック・重厚感"
-  ],
-  theme: [
-    "旅立ちの朝", "秘密の待ち合わせ", "失われた記憶の欠片", "最後の魔法",
-    "境界線を越える瞬間", "雨宿りの会話", "届かない手紙", "双子の対比",
-    "機械と心の目覚め", "季節の終わり", "約束の場所", "仮面の下の素顔"
-  ],
-  flower: [
-    "彼岸花（情熱・独立）", "青いバラ（夢かなう・奇跡）", "かすみ草（清らかな心・感謝）",
-    "ひまわり（憧れ・あなただけを見つめる）", "藤の花（優しさ・決して離れない）",
-    "スズラン（再び幸せが訪れる）", "椿（控えめな優しさ・誇り）", "ネモフィラ（どこでも成功・可憐）",
-    "キンモクセイ（謙虚・初恋）", "白ユリ（純潔・威厳）", "アネモネ（はかない恋・期待）",
-    "ミモザ（感謝・思いやり）"
-  ],
-  gender: [
-    "少年", "少女", "青年", "大人の女性", "中性的・アンドロジナス",
-    "幼い子ども", "長命種・エルフ風", "アンドロイド・人外風"
-  ],
-  age: [
-    "10歳前後（無邪気）", "14歳前後（思春期・あどけなさ）", "17歳前後（高校生・青春）",
-    "20代前半（フレッシュ・大人びた）", "20代後半（落ち着き・色気）", "年齢不詳（神秘的）"
-  ],
-  hairstyle: [
-    "ウルフカット", "姫カットロング", "ゆるふわウェーブボブ", "高めのポニーテール",
-    "無造作マッシュショート", "三つ編みおさげ", "ハーフアップお団子", "外ハネミディアム",
-    "センターパートショート", "スーパーロングストレート", "片目隠れアシメヘア", "低めツインテール",
-    "かきあげバングロング", "ベリーショート", "編み込みカチューシャ風"
-  ],
-  haircolor: [
-    "漆黒×インナーブルー", "プラチナブロンド", "アッシュグレー×シルバーメッシュ",
-    "ミルクティーベージュ", "深紅・ワインレッド", "ネイビーブルー×毛先グラデ",
-    "桜ピンク×ホワイトインナー", "オリーブアッシュ", "ココアブラウン",
-    "ラベンダーパープル", "白髪・アルビノ風", "ターコイズグリーン"
-  ],
-  eyecolor: [
-    "琥珀色（アンバー）", "深いサファイアブルー", "エメラルドグリーン", "オッドアイ（金×青）",
-    "ルビーレッド", "紫水晶（アメジスト）", "透き通るシルバーグレー", "夕焼けグラデーション瞳",
-    "三白眼・クール", "たれ目・優しい茶瞳", "ハイライトなしの虚ろな瞳", "星が宿るような夜空色"
-  ],
-  expression: [
-    "少し照れた微笑み", "何かを企む不敵な笑み", "切なげに遠くを見つめる",
-    "驚いて目を見開く", "無表情・クール", "涙を浮かべた笑顔",
-    "眠たげなジト目", "自信満々のドヤ顔", "口元に指を当てて内緒のポーズ", "優しい慈愛の眼差し"
-  ],
-  fashion: [
-    "オーバーサイズパーカー×ストリート系", "ゴシックロリータドレス", "和洋折衷大正ロマン着物",
-    "サイバーパンク風テックウェア", "ブレザー制服×カーディガン", "ロングトレンチコート×スーツ",
-    "魔法使いのローブ×星柄マント", "中華風チャイナジャケットコーデ", "白衣・研究者スタイル",
-    "スチームパンク風ベスト×ゴーグル", "レトロ喫茶のメイド服", "厚手のニットセーター×マフラー",
-    "夏用セーラー服×麦わら帽子", "軍服風マント×装飾ボタン", "サブカル系ジャージメイド"
-  ],
-  pose: [
-    "振り返りざまの視線", "空を見上げて手を伸ばす", "椅子に深く腰掛けて頬杖",
-    "風になびく髪を押さえる", "しゃがみ込んでこちらを見上げる", "武器や小物を構える躍動感",
-    "窓枠に腰掛けるリラックスポーズ", "フードを深く被って顔半分を隠す", "歩み寄りながら手を差し伸べる",
-    "俯瞰アングル（上から見下ろす構図）", "あおりアングル（下から見上げる構図）"
-  ],
-  prop: [
-    "透明なビニール傘", "アンティークの懐中時計", "古い革装丁の魔導書",
-    "クリームソーダ", "一輪の花束", "ヘッドホン・カセットプレイヤー",
-    "ランタン・ランプ", "日本刀・装飾剣", "カメラ（フィルムカメラ）",
-    "手紙と封蝋", "黒猫・使い魔", "トランクケース"
-  ]
+    "場所": ["学校の教室", "学校の屋上", "図書室", "プールサイド", "バス停", "駅のホーム", "神社", "木の上の秘密基地", "水族館の大水槽前", "駄菓子屋","古びた洋館の階段", "桜の木の下", "見晴らしのいい丘", "コンビニの駐車場", "灯台", "地下鉄の改札前", "河川敷", "森の中", "街角", "体育館","海岸線", "ひまわり畑", "廃校の廊下", "珈琲ショップ", "遊園地", "観覧車の中", "古本屋の奥の棚", "高架下", "植物園の温室", "コインランドリー","散歩道", "サイバーパンクの街頭", "湖畔", "時計塔の頂上", "レコードショップ", "武家屋敷の庭園", "大きな橋のたもと", "広場", "風車の見える丘", "巨大な書庫","地下室", "飛行機の機内", "空港の展望デッキ", "雲の上の世界", "崩れかけた遺跡", "海底都市の窓際", "宇宙船の操縦席", "月面のクレーター", "魔法の調薬室", "お菓子でできた森","天空の城のバルコニー", "巨大樹の幹の中", "竜の巣の洞窟", "クリスタルの洞窟", "異世界の市場", "精霊の宿る泉", "滅びた王国の玉座", "時計仕掛けの部屋", "スチームパンクの工房", "蒸気機関車の客席","空中庭園", "キノコの森", "豪華客船の甲板", "石畳の路地", "海賊船の甲板", "氷の宮殿", "地下迷宮の宝物庫", "廃墟の教会", "天空へ続く階段", "モデルルームの一室","自分の部屋", "ベランダ", "学習塾の自習室", "美術館の展示室", "ライブハウスのステージ", "撮影スタジオ", "美容室の鏡前", "ホテルの客室", "劇場の観客席", "病院の待合室","理科室", "美術室", "家庭科室", "放送室", "部室棟の踊り場", "学校の昇降口", "体育館のステージ裏", "校庭のベンチ", "裏山の祠", "コインパーキング","ガソリンスタンド", "高速道路のサービスエリア", "歩道橋", "ビルの屋上", "タクシーの車内", "無人駅", "踏切の前", "フェリーのデッキ", "高速バスの車内", "アクアリウムカフェ"],
+    "時間帯": ["朝", "昼", "夕方", "夜", "深夜", "明け方", "早朝", "正午", "日没", "日の出", "薄暮", "黎明", "暁", "東雲", "曙", "黄昏", "逢魔が時", "禍津時", "逢魔時", "白夜", "極夜", "丑三つ時", "子刻", "丑刻", "寅刻", "卯刻", "辰刻", "巳刻", "午刻", "未刻", "申刻", "酉刻", "戌刻", "亥刻", "草木も眠る丑三つ時", "かわたれ時", "黄昏時", "暮れ六つ", "明け六つ", "日中", "昼下がり", "宵", "宵の口", "真夜中", "未明", "夜半", "夜深し", "夜明け", "朝ぼらけ", "朝靄の刻", "夕まぐれ", "夕暮れ", "夕刻", "夕闇", "夜浅し", "小夜中", "深夜帯"],
+    "雰囲気": ["神秘的", "不気味", "ノスタルジック", "退廃的", "壮大", "緊迫感のある", "アンニュイ", "どこか懐かしい", "殺伐とした", "ユーモラス", "ファンタジー風", "殺風景", "静寂", "和やか", "ダーク", "幻想的", "メルヘンチック", "サイバーパンク風", "スチームパンク風", "物悲しい", "優雅", "荒涼とした", "不吉", "煌びやか", "シュール", "クラシカル", "ポップ", "無機質", "どこか切ない", "日常的", "ほのぼの", "緊迫した", "気品ある", "ゴシック調", "アットホーム", "重厚", "カオス", "静けさの漂う", "神秘的で厳か","切ない", "幻想的", "コミカル", "温かく穏やか", "ドラマチック", "儚い", "少し怪しげ", "どこか哀愁のある"],
+    "天気": ["晴れ", "快晴", "薄曇り", "曇り", "小雨", "大雨", "土砂降り", "ゲリラ豪雨", "通り雨", "にわか雨", "霧雨", "恵みの雨", "粉雪", "ボタン雪", "大雪", "吹雪", "みぞれ", "ひょう", "あられ", "霙", "霧", "濃霧", "靄", "ガス", "強風", "暴風", "突風", "木枯らし", "春一番", "台風", "竜巻", "雷雨", "雷鳴", "雷", "晴れ時々曇り", "曇りのち雨", "雨のち晴れ", "ピーカン", "日本晴れ", "狐の嫁入り", "空梅雨", "長雨", "秋霖", "菜種梅雨", "寒波", "熱波", "ダイヤモンドダスト"],
+    "テーマカラー": ["赤", "青", "黄", "緑", "白", "黒", "紫", "桃", "橙", "茶","水色", "黄緑", "紺", "灰", "朱色", "金", "銀", "藤色", "深緑", "山吹色","群青", "躑躅色", "鶯色", "琥珀色", "真紅", "藍色", "萌黄", "牡丹色", "茜色", "青竹色","浅葱色", "桔梗色", "瑠璃色", "薄雲鼠", "常盤色", "千歳緑", "生成り", "栗色", "小豆色", "海老茶","葡萄色", "漆黒", "純白", "天色", "勿忘草色", "露草色", "若竹色", "若草色", "苗色", "萌黄","金糸雀色", "杏色", "柿色", "珊瑚色", "長春色", "韓紅花", "撫子色", "紫苑色", "菖蒲色", "杜若色","江戸紫", "滅紫", "ワインレッド", "ターコイズ", "マゼンタ", "シアン", "ライム", "ベージュ", "カーキ", "オリーブ","チャコール", "アイボリー", "ミントグリーン", "ラベンダー", "サーモンピンク", "キャメル", "ボルドー", "コバルトブルー", "ブロンズ", "プラチナ"],
+    "花": [
+        "バラ（赤）「あなたを愛してます、情熱」",
+        "バラ（白）「純潔、深い尊敬」",
+        "バラ（ピンク）「上品、感謝」",
+        "バラ（黄）「友情、献身」",
+        "ヒマワリ「憧れ、あなただけを見つめる」",
+        "チューリップ（赤）「愛の告白」",
+        "チューリップ（ピンク）「誠実な愛」",
+        "チューリップ（黄）「名声、望みのない恋」",
+        "チューリップ（紫）「不滅の愛」",
+        "アジサイ「移り気、辛忍強さ、団らん」",
+        "ガーベラ「希望、前進」",
+        "ユリ（白）「純潔、威厳」",
+        "サクラ「精神美、優美な女性」",
+        "コスモス「乙女の真心、調和」",
+        "カーネーション（赤）「母への愛」",
+        "カーネーション（ピンク）「感謝の心」",
+        "ダリア「華麗、気品」",
+        "スズラン「再び幸せが訪れる、純粋」",
+        "ネモフィラ「可憐、どこでも成功」",
+        "ラベンダー「期待、沈黙」",
+        "マーガレット「信頼、真実の愛」",
+        "ポピー「慰め、思いやり」",
+        "スイートピー「門出、優しい思い出」",
+        "アネモネ「はかない恋、期待」",
+        "キンモクセイ「謙虚、気高い人」",
+        "ハイビスカス「繊細な美、新しい恋」",
+        "プルメリア「気品、恵まれた人」",
+        "ブーゲンビリア「情熱、あなたしか見えない」",
+        "アザレア「節制、充足」",
+        "アルストロメリア「持続、未来への憧れ」",
+        "アイリス「希望、朗報」",
+        "ウメ「高潔、忍耐」",
+        "カメリア（ツバキ）「控えめな素晴らしさ、誇り」",
+        "キキョウ「永遠の愛、誠実」",
+        "クローバー（四つ葉）「幸運、約束」",
+        "クレマチス「精神の美、旅人の喜び」",
+        "クロッカス「切望、青春の喜び」",
+        "サザンカ「ひたむきな愛、困難に打ち勝つ」",
+        "シクラメン「遠慮、絆」",
+        "シャクヤク「恥じらい、謙遜」",
+        "スイレン「清純な心、信仰」",
+        "スノードロップ「希望、慰め」",
+        "スミレ「謙虚、誠実」",
+        "ゼラニウム「尊敬、信頼」",
+        "セントポーリア「小さな愛」",
+        "タンポポ「愛の神託、真心の愛」",
+        "デルフィニウム「清純、あなたを幸せにします」",
+        "ナノハナ「快活、明るさ」",
+        "ナンテン「私の愛は増すばかり、良い家庭」",
+        "バーベナ「魔力、勤勉」",
+        "シネラリア「喜び、快活」",
+        "パンジー「物思い、誠実」",
+        "ビオラ「誠実、少女の恋」",
+        "ヒガンバナ「情熱、独立、再会」",
+        "ヒース「孤独、寂しさ」",
+        "ヒアシンス「控えめな愛しさ、ゲーム」",
+        "フクジュソウ「幸せを掴む、永久の幸福」",
+        "フリージア「親愛の情、あどけなさ」",
+        "ペチュニア「あなたと一緒なら心がやわらぐ」",
+        "ボケ「先駆者、平凡」",
+        "ボタン「権威、風格」",
+        "マリーゴールド「絶望、真心」",
+        "ミモザ「感謝、思いやり」",
+        "ミュゲ（鈴蘭）「幸福の再来」",
+        "ムスカリ「失望、明るい未来」",
+        "モクレン「自然への愛、持続性」",
+        "ヤグルマギク「繊細、教育」",
+        "ヤマブキ「気品、金運」",
+        "ユーカリ「新生、再生」",
+        "ラナンキュラス「魅力的、華やかな魅力」",
+        "リンドウ「勝利、正義感」",
+        "ルピナス「想像力、いつも幸せ」",
+        "レモンフラワー「誠実な愛、愛の忠実」",
+        "レンギョウ「期待、希望」",
+        "ローダンセ「終わりのない友情」",
+        "ワスレナグサ「私を忘れないで、真実の愛」",
+        "オリーブ「平和、知恵」",
+        "カモミール「逆境に耐える、親交」",
+        "カスミソウ「清らかな心、無邪気」",
+        "ブルースター「幸福な愛、信じあう心」"
+    ],
+    "性別": ["男", "女"],
+    "年代": [
+        "10代前半", "10代後半",
+        "20代前半", "20代後半",
+        "30代前半", "30代後半",
+        "40代前半", "40代後半",
+        "50代前半", "50代後半",
+        "60代前半", "60代後半",
+        "70代前半", "70代後半",
+        "80代前半", "80代後半",
+        "90代前半", "90代後半"
+    ],
+    "髪型_男": [
+        "マッシュショート", "ツーブロックショート", "センターパートショート", "スパイラルパーマショート", "ツイストスパイラルマッシュ", "ウルフカット", "ショートウルフ", "レイヤーボブ", "ハンサムマッシュ", "ベリーショート",
+        "ソフトモヒカン", "アップバングショート", "ナチュラルマッシュ", "シースルーバングマッシュ", "カルマヘア", "クラウドマッシュ", "コンマヘア", "ウルフボブ", "ジェットモヒカン", "フェードカット",
+        "クロップスタイル", "スキンフェード", "ツーブロックマッシュ", "波巻きパーマショート", "ツイスパボブ", "ミディアムボブ", "グラデーションボブ", "王道束感ショート", "無造作ショート", "ナチュラルショート",
+        "前髪長めマッシュ", "重めマッシュ", "軽めマッシュ", "センターパートボブ", "スパイラルボブ", "ツイストパーマショート", "ニュアンスパーマショート", "エアリーショート", "アシメショート", "ウルフスパイラル",
+        "ミディアムウルフ", "ロングヘア", "マンバン（おだんご）", "ポニーテール", "ハーフアップ", "ドレッドヘア", "ツイストブレイズ", "アフロ", "坊主（ボウズ）", "ベリーショートフェード",
+        "サイドパートショート", "七三分けショート", "オールバック", "ネオ七三", "スリックバック", "リーゼント", "ポンパドール", "ツーブロックウルフ", "シャギーショート", "ウルフボブパーマ",
+        "ベリーショートモヒカン", "テクノカット", "マッシュウルフ", "センターパートウルフ", "韓国風カルマパーマ", "韓国風シースルーマッシュ", "ガイルヘア", "シークレットパーマショート", "シャドウパーマ", "リップサービスボブ",
+        "ミディアムレイヤー", "肩上ボブ", "鎖骨ミディアム", "ウルフロング", "ウルフパーマ", "スパイラルロング", "ツイストロング", "ナチュラルロング", "ワンサイドショート", "アシメマッシュ",
+        "ショートボブ", "ラウンドマッシュ", "スクエアマッシュ", "ボウルカット", "タッセルボブ", "ウルフショートパーマ", "ハードスパイラルショート", "ツイストマッシュ", "ランダムパーマショート", "スモーキーパーマ",
+        "センターパートスパイラル", "センターパートツイスト", "かき上げショート", "かき上げミディアム", "ハイサイドフェード", "ローサイドフェード", "ミッドフェード", "テーパーフェード", "バズカット", "クルーカット"
+    ],
+    "髪型_女": [
+        "ショートボブ", "ボブ", "ミディアムボブ", "ロングボブ（ロブ）", "ショートカット", "ベリーショート", "ハンサムショート", "マッシュボブ", "ウルフカット", "ショートウルフ",
+        "ミディアムレイヤー", "セミロング", "ロングヘア", "スーパーロング", "姫カット", "シースルーバングショート", "パッツンボブ", "切りっぱなしボブ", "タッセルボブ", "ワンレンボブ",
+        "レイヤーロング", "ゆるふわパーマ", "ウェーブヘア", "スパイラルパーマ", "外ハネボブ", "内巻きボブ", "かき上げロング", "センターパートボブ", "ポニーテール", "ツインテール",
+        "ハーフアップ", "お団子（シニヨン）", "三つ編み", "編み込み", "フィッシュボーン", "サイドポニーテール", "エビ編み", "ツインお団子", "ハーフアップお団子", "ローポニーテール"
+    ],
+    "髪型_共通": [
+        "ショートボブ", "ボブ", "ミディアムボブ", "ロングボブ（ロブ）", "ショートカット", "ベリーショート", "ハンサムショート", "マッシュボブ", "ウルフカット", "ショートウルフ",
+        "ミディアムレイヤー", "セミロング", "ロングヘア", "スーパーロング", "姫カット", "シースルーバングショート", "パッツンボブ", "切りっぱなしボブ", "タッセルボブ", "ワンレンボブ",
+        "レイヤーロング", "ゆるふわパーマ", "ウェーブヘア", "スパイラルパーマ", "外ハネボブ", "内巻きボブ", "かき上げロング", "センターパートボブ", "ポニーテール", "ツインテール",
+        "ハーフアップ", "お団子（シニヨン）", "三つ編み", "編み込み", "フィッシュボーン", "サイドポニーテール", "エビ編み", "ツインお団子", "ハーフアップお団子", "ローポニーテール",
+        "マッシュショート", "ツーブロックショート", "センターパートショート", "スパイラルパーマショート", "ツイストスパイラルマッシュ", "ウルフカット", "ショートウルフ", "レイヤーボブ", "ハンサムマッシュ", "ベリーショート",
+        "ソフトモヒカン", "アップバングショート", "ナチュラルマッシュ", "シースルーバングマッシュ", "カルマヘア", "クラウドマッシュ", "コンマヘア", "ウルフボブ", "ジェットモヒカン", "フェードカット",
+        "クロップスタイル", "スキンフェード", "ツーブロックマッシュ", "波巻きパーマショート", "ツイスパボブ", "ミディアムボブ", "グラデーションボブ", "王道束感ショート", "無造作ショート", "ナチュラルショート",
+        "前髪長めマッシュ", "重めマッシュ", "軽めマッシュ", "センターパートボブ", "スパイラルボブ", "ツイストパーマショート", "ニュアンスパーマショート", "エアリーショート", "アシメショート", "ウルフスパイラル",
+        "ミディアムウルフ", "ロングヘア", "マンバン（おだんご）", "ポニーテール", "ハーフアップ", "ドレッドヘア", "ツイストブレイズ", "アフロ", "坊主（ボウズ）", "ベリーショートフェード",
+        "サイドパートショート", "七三分けショート", "オールバック", "ネオ七三", "スリックバック", "リーゼント", "ポンパドール", "ツーブロックウルフ", "シャギーショート", "ウルフボブパーマ",
+        "ベリーショートモヒカン", "テクノカット", "マッシュウルフ", "センターパートウルフ", "韓国風カルマパーマ", "韓国風シースルーマッシュ", "ガイルヘア", "シークレットパーマショート", "シャドウパーマ", "リップサービスボブ",
+        "ミディアムレイヤー", "肩上ボブ", "鎖骨ミディアム", "ウルフロング", "ウルフパーマ", "スパイラルロング", "ツイストロング", "ナチュラルロング", "ワンサイドショート", "アシメマッシュ",
+        "ショートボブ", "ラウンドマッシュ", "スクエアマッシュ", "ボウルカット", "タッセルボブ", "ウルフショートパーマ", "ハードスパイラルショート", "ツイストマッシュ", "ランダムパーマショート", "スモーキーパーマ",
+        "センターパートスパイラル", "センターパートツイスト", "かき上げショート", "かき上げミディアム", "ハイサイドフェード", "ローサイドフェード", "ミッドフェード", "テーパーフェード", "バズカット", "クルーカット"
+    ],
+    "髪の色": [
+        "黒色", "茶色", "焦げ茶色", "金色", "銀色", "白色", "赤色", "青色", "緑色", "紫色",
+        "ピンク色", "水色", "オレンジ色", "黄緑色", "紺色", "灰色", "ラベンダー色", "アッシュグレー色", "ミルクティー色", "ベージュ色",
+        "ピンクベージュ色", "オリーブ色", "ボルドー色", "ワインレッド色", "ターコイズ色", "ネイビー色", "サーモンピンク色", "ローズゴールド色", "プラチナブロンド色", "インディゴ色",
+        "栗色", "亜麻色", "茜色", "藤色", "琥珀色", "瑠璃色", "墨色", "紅褐色", "萌黄色", "ヤマブキ色",
+        "黒色（インナーピンク色）", "茶色（インナー金色）", "焦げ茶色（インナー赤色）", "金色（インナー紫色）", "銀色（インナー青色）",
+        "白色（インナー黒色）", "黒色（インナー水色）", "アッシュグレー色（インナーラベンダー色）", "ミルクティー色（インナーオレンジ色）", "ベージュ色（インナー緑色）",
+        "紺色（インナー銀色）", "ボルドー色（インナー金色）", "黒色（インナー緑色）", "茶色（インナーターコイズ色）", "プラチナブロンド色（インナーピンク色）",
+        "灰色（インナーワインレッド色）", "オリーブ色（インナーイエロー色）", "黒色（インナーホワイト色）", "ラベンダー色（インナーピンク色）", "ネイビー色（インナー浅葱色）"
+    ],
+    "目の色": [
+        "赤色", "青色", "黄色", "緑色", "紫色", "桃色", "橙色", "茶色", "水色", "黄緑色",
+        "紺色", "灰色", "黒色", "白色", "金色", "銀色", "琥珀色", "翡翠色", "瑠璃色", "紅褐色",
+        "オリーブ色", "ヘーゼル色", "ターコイズ色", "ラベンダー色", "アメジスト色", "アクアブルー色", "ワインレッド色", "オパール色", "オニキス色", "オッドアイ（左右非対称）"
+    ],
+    "表情": [
+        "笑った",
+        "引きつった",
+        "困った",
+        "ドヤ",
+        "キョトンとした",
+        "渋い",
+        "真",
+        "澄ました",
+        "怒った",
+        "泣き",
+        "照れた",
+        "ぽかんとした",
+        "企んだ",
+        "虚無の",
+        "怪訝な",
+        "神妙な",
+        "呆れた",
+        "満面の笑みを浮かべた",
+        "ニヤリとした",
+        "思いつめた",
+        "驚いた",
+        "誇らしげな",
+        "浮かない",
+        "屈託のない",
+        "どこか寂しげな",
+        "寝ぼけた",
+        "真剣な",
+        "不機嫌そうな",
+        "清々しい",
+        "恍惚とした"
+    ],
+    "服装": [
+        "メイド服", "宇宙服", "白衣（医師・研究員）", "ナース服", "執事服", "警察官の制服", "軍服", "消防士の服", "パイロットスーツ", "コック服・シェフ服",
+        "パティシエ服", "探偵のコート", "修道服（シスター服）", "巫女装束", "神父服・聖職者の衣", "魔法使いのローブ", "騎士の鎧・甲冑", "王族・貴族のドレス", "海賊の衣装", "サーカス団員の衣装",
+        "怪盗のスーツ", "忍者装束", "侍の着物・袴", "ウェイトレス服", "バーテンダーの衣装", "整備士のつなぎ", "レーサーのライダースーツ", "キャビンアテンダント（CA）の制服", "フライトアテンダント", "事務員・オフィスワーカーのスーツ",
+        "ダンス衣装", "アイドルのステージ衣装", "ミュージシャンのライブ衣装", "バレリーナのチュチュ", "マジシャンのタキシード", "探検家・サファリ服", "ダイビングスーツ", "スキーウェア", "スポーツのユニフォーム", "審判服",
+        "バーガーショップの制服", "カフェの店員服", "書店員の文庫エプロン", "花屋のエプロン姿", "清掃員の作業服", "警備員・ガードマンの制服", "郵便配達員の制服", "電車の運転士・車掌の制服", "バスガイドの制服", "ホテルのドアマン衣装",
+        "サンタクロース衣装", "バニーガール衣装", "チャイナドレス", "チアリーダー衣装", "水着", "パジャマ・ルームウェア", "体操着（ジャージ）", "スクール水着", "和服（着物・振袖）", "浴衣",
+        "ドレス（カクテルドレス）", "ウェディングドレス", "タキシード", "喪服", "法衣・袈裟", "チマチョゴリ", "アオザイ", "サリー", "ポンチョ", "民族衣装（ディアンドル等）",
+        "サーファーのラッシュガード", "ライフセーバーの服", "登山服・トレッキングウェア", "フィギュアスケートの衣装", "剣道着・道道着", "弓道着", "空手・柔道着", "ボクサーのトランクス", "プロレスラーの衣装", "乗馬服",
+        "サーカス・空中ブランコ衣装", "ピエロ（クラウン）の衣装", "ピエロ風サーカス衣装", "吟遊詩人の服", "錬金術師の服", "木こり・樵の服", "鉱夫・炭鉱夫の作業着", "漁士の合羽・作業着", "農家・農作業着", "ガードマンの制服",
+        "警備員の制服", "考古学者の服", "学者・教授のガウン", "学生服（学ラン）", "セーラー服", "ブレザー制服", "チェック柄ブレザー", "幼稚園・保育園の園児服", "児童の黄色い帽子と服", "ベビードール"
+    ],
+    "ポーズ": [
+        "振り返って", "歩いて", "走って", "座って", "しゃがんで", "寝そべって", "ジャンプして", "手を振って", "腕を組んで", "手をつないで",
+        "頬杖をついて", "首をかしげて", "ウインクして", "両手を広げて", "ピースして", "指をさして", "髪をかき上げて", "スカートの裾を掴んで", "ポケットに手を入れて", "壁に寄りかかって",
+        "背伸びをして", "あくびをして", "うつむいて", "空を見上げて", "手で顔を覆って", "拳を突き上げて", "頭の後ろで手を組んで", "前屈みになって", "地面に絵を描いて", "肘をついて",
+        "踊って", "刀を構えて", "銃を構えて", "弓を引いて", "魔法を唱えて", "本を読んで", "スマホを眺めて", "飲み物を飲んで", "傘をさして", "風に煽られて"
+    ],
+    "小物": [
+        "スマホ", "鍵束", "懐中時計", "メガネ", "サングラス", "イヤホン", "ヘッドホン", "ビニール傘", "折りたたみ傘", "日傘",
+        "文庫本", "ノート", "万年筆", "スケッチブック", "ペンケース", "レザーの財布", "ポーチ", "コインケース", "定期入れ", "トートバッグ",
+        "リュックサック", "クラッチバッグ", "ショルダーバッグ", "ハンドバッグ", "旅行カバン", "水筒", "タンブラー", "マグカップ", "ティーカップ", "ガラス瓶",
+        "指輪", "ネックレス", "ピアス", "ブレスレット", "ヘアピン", "ヘアゴム", "リボン", "腕時計", "懐中電灯", "ライター",
+        "マッチ箱", "ハンカチ", "手袋", "マフラー", "ストール", "帽子（ベレー帽）", "帽子（ニット帽）", "帽子（キャップ）", "扇子", "うちわ",
+        "コンパクトミラー", "リップクリーム", "香水瓶", "ハンドクリーム", "カメラ", "フィルムカメラ", "双眼鏡", "ルーペ", "ランタン", "キャンドル",
+        "鍵（アンティーク風）", "宝箱", "トランプ", "サイコロ", "チェスの駒", "ぬいぐるみ", "ハーバリウム", "ドライフラワーの束", "一輪挿しの花瓶", "タロットカード",
+        "ゲーム機", "カセットテープ", "レコード盤", "ポータブルプレイヤー", "缶バッジ", "アクリルキーホルダー", "絵の具とパレット", "画筆", "包帯", "眼帯",
+        "ヘッドドレス", "チョーカー", "サスペンダー", "革ベルト", "懐中薬箱", "魔法の杖", "魔導書", "羊皮紙の巻物", "羅針盤（コンパス）", "天球儀"
+    ]
 };
 
-// ラベル名マッピング
-const CATEGORY_LABELS = {
-  location: "場所・背景",
-  time: "時間帯",
-  weather: "天気・季節感",
-  atmosphere: "雰囲気・ライティング",
-  theme: "テーマ・物語性",
-  flower: "モチーフ花・花言葉",
-  gender: "性別・タイプ",
-  age: "年齢感",
-  hairstyle: "髪型",
-  haircolor: "髪色・インナーカラー",
-  eyecolor: "瞳の色・特徴",
-  expression: "表情",
-  fashion: "服装・衣装デザイン",
-  pose: "ポーズ・構図",
-  prop: "小物・持ち物"
-};
+/* ==========================================
+   排他選択（自動制限）ロジック
+========================================== */
+const chkLocation = document.getElementById('chk-location');
+const chkTime = document.getElementById('chk-time');
+const chkWeather = document.getElementById('chk-weather');
+const chkAtmosphere = document.getElementById('chk-atmosphere');
+const chkColor = document.getElementById('chk-color');
+const chkFlower = document.getElementById('chk-flower');
+const chkHairstyle = document.getElementById('chk-hairstyle');
+const chkHaircolor = document.getElementById('chk-haircolor');
 
-// 状態管理
-const state = {
-  current: {},
-  locked: {},
-  stocks: []
-};
+function updateExclusionRules(triggerKey) {
+    const isColor = chkColor.checked;
+    const isFlower = chkFlower.checked;
+    const isLoc = chkLocation.checked;
+    const isTime = chkTime.checked;
+    const isAtmosphere = chkAtmosphere.checked;
+    const isHairstyle = chkHairstyle.checked;
 
-// 初期化
-document.addEventListener("DOMContentLoaded", () => {
-  loadStocks();
-  setupEventListeners();
-  generateAll();
+    // ① 髪型と髪色の依存連動：髪型が選択されていなければ髪色は強制無効化
+    if (!isHairstyle) {
+        setCheckboxState('haircolor', false);
+    } else {
+        setCheckboxState('haircolor', true);
+    }
+
+    // ② テーマカラーが選ばれたら：その他のシチュエーションを選択不可に
+    if (triggerKey === 'color' && isColor) {
+        setCheckboxState('location', false);
+        setCheckboxState('time', false);
+        setCheckboxState('atmosphere', false);
+        setCheckboxState('weather', false);
+        setCheckboxState('flower', false);
+        return;
+    }
+
+    // ③ 花が選ばれたら：その他のシチュエーションを選択不可に
+    if (triggerKey === 'flower' && isFlower) {
+        setCheckboxState('location', false);
+        setCheckboxState('time', false);
+        setCheckboxState('atmosphere', false);
+        setCheckboxState('weather', false);
+        setCheckboxState('color', false);
+        return;
+    }
+
+    // ④ 場所が選ばれている場合 ➔ テーマカラーと花を自動無効化
+    if (isLoc) {
+        setCheckboxState('color', false);
+        setCheckboxState('flower', false);
+    } else if (!isColor && !isFlower) {
+        setCheckboxState('color', true);
+        setCheckboxState('flower', true);
+    }
+
+    // ⑤ 場所・時間帯・雰囲気の連動ルール
+    if (isLoc && isTime) {
+        setCheckboxState('atmosphere', false);
+    } else if (isLoc && isAtmosphere) {
+        setCheckboxState('time', false);
+        setCheckboxState('weather', false);
+    } else if (!isColor && !isFlower) {
+        setCheckboxState('location', true);
+        setCheckboxState('time', true);
+        setCheckboxState('atmosphere', true);
+        setCheckboxState('weather', true);
+    }
+}
+
+function setCheckboxState(idKey, enabled) {
+    const chk = document.getElementById(`chk-${idKey}`);
+    const lbl = document.getElementById(`lbl-${idKey}`);
+    if (!chk || !lbl) return;
+
+    if (!enabled) {
+        chk.checked = false;
+        chk.disabled = true;
+        lbl.classList.add('disabled');
+    } else {
+        chk.disabled = false;
+        lbl.classList.remove('disabled');
+    }
+}
+
+// 各チェックボックスの監視登録
+[chkLocation, chkTime, chkWeather, chkAtmosphere, chkColor, chkFlower, chkHairstyle].forEach(chk => {
+    chk.addEventListener('change', (e) => {
+        const key = e.target.id.replace('chk-', '');
+        updateExclusionRules(key);
+    });
 });
 
-// ランダム取得ヘルパー
-function getRandomItem(list, excludeValue = null) {
-  if (list.length <= 1) return list[0];
-  let candidate;
-  let attempts = 0;
-  do {
-    candidate = list[Math.floor(Math.random() * list.length)];
-    attempts++;
-  } while (candidate === excludeValue && attempts < 10);
-  return candidate;
-}
-
-// 矛盾防止ルールチェック
-function isContradictory(topicObj) {
-  const weather = topicObj.weather || "";
-  const fashion = topicObj.fashion || "";
-  const location = topicObj.location || "";
-
-  // 真夏・入道雲 × 厚手ニット・吹雪
-  if ((weather.includes("真夏") || weather.includes("入道雲")) &&
-      (fashion.includes("厚手のニット") || fashion.includes("マフラー") || location.includes("雪化粧"))) {
-    return true;
-  }
-  // 吹雪・雪化粧 × 夏用セーラー服・麦わら帽子
-  if ((weather.includes("吹雪") || weather.includes("粉雪") || location.includes("雪化粧")) &&
-      (fashion.includes("夏用セーラー服") || fashion.includes("麦わら帽子"))) {
-    return true;
-  }
-  return false;
-}
-
-// 全項目抽選
-function generateAll() {
-  const useExclusion = document.getElementById("exclusionToggle").checked;
-  const keys = Object.keys(MASTER_DATA);
-  let attempts = 0;
-  let nextValues = {};
-
-  do {
-    nextValues = { ...state.current };
-    keys.forEach((key) => {
-      if (!state.locked[key]) {
-        nextValues[key] = getRandomItem(MASTER_DATA[key], state.current[key]);
-      }
+// 全選択 / 全解除
+document.getElementById('btnSelectAll').addEventListener('click', () => {
+    document.querySelectorAll('.elem-cb').forEach(cb => {
+        if (!cb.disabled) cb.checked = true;
     });
-    attempts++;
-  } while (useExclusion && isContradictory(nextValues) && attempts < 20);
+    updateExclusionRules();
+});
 
-  state.current = nextValues;
-  renderAll();
+document.getElementById('btnDeselectAll').addEventListener('click', () => {
+    document.querySelectorAll('.elem-cb').forEach(cb => {
+        cb.checked = false;
+    });
+    updateExclusionRules();
+});
+
+// 初期実行
+updateExclusionRules();
+
+/* ==========================================
+   お題生成処理（特定定型文接続ロジック）
+========================================== */
+let currentGeneratedPrompt = "";
+
+document.getElementById('btnGenerate').addEventListener('click', () => {
+    const selectedData = {};
+
+    // 1. 性別の抽選（男 / 女）
+    if (document.getElementById('chk-gender').checked) {
+        selectedData['性別'] = MASTER_DATA["性別"][Math.floor(Math.random() * MASTER_DATA["性別"].length)];
+    }
+
+    // 2. 髪型の抽選（性別専用フィルタリング）
+    if (document.getElementById('chk-hairstyle').checked) {
+        let hairPool = MASTER_DATA["髪型_共通"];
+        if (selectedData['性別'] === '男') hairPool = MASTER_DATA["髪型_男"];
+        if (selectedData['性別'] === '女') hairPool = MASTER_DATA["髪型_女"];
+        selectedData['髪型'] = hairPool[Math.floor(Math.random() * hairPool.length)];
+    }
+
+    // 3. その他一般項目の抽選
+    const otherKeys = [
+        { id: 'location', name: '場所' },
+        { id: 'time', name: '時間帯' },
+        { id: 'atmosphere', name: '雰囲気' },
+        { id: 'weather', name: '天気' },
+        { id: 'color', name: 'テーマカラー' },
+        { id: 'flower', name: '花' },
+        { id: 'age', name: '年代' },
+        { id: 'haircolor', name: '髪の色' },
+        { id: 'eyecolor', name: '目の色' },
+        { id: 'expression', name: '表情' },
+        { id: 'fashion', name: '服装' },
+        { id: 'pose', name: 'ポーズ' },
+        { id: 'item', name: '小物' }
+    ];
+
+    otherKeys.forEach(k => {
+        const chk = document.getElementById(`chk-${k.id}`);
+        if (chk && chk.checked && !chk.disabled && MASTER_DATA[k.name]) {
+            const arr = MASTER_DATA[k.name];
+            selectedData[k.name] = arr[Math.floor(Math.random() * arr.length)];
+        }
+    });
+
+    if (Object.keys(selectedData).length === 0) {
+        alert("要素を少なくとも1つ以上選択してください！");
+        return;
+    }
+
+    // --- 指定接続語による文章構築 ---
+    let resultSentence = "";
+
+    // シチュエーション前半の判定
+    let situationPart = "";
+    if (selectedData['雰囲気'] && selectedData['場所']) {
+        // 【場所、雰囲気を選んだ時】
+        situationPart = `「${selectedData['雰囲気']}」な「${selectedData['場所']}」で、`;
+    } else if (selectedData['時間帯'] && selectedData['天気'] && selectedData['場所']) {
+        // 【場所、天気、時間帯を選んだ時】
+        situationPart = `「${selectedData['時間帯']}」、「${selectedData['天気']}」の「${selectedData['場所']}」で、`;
+    } else {
+        // 単体選択時のフォールバック構成
+        const sitArr = [];
+        if (selectedData['場所']) sitArr.push(`「${selectedData['場所']}」で`);
+        if (selectedData['時間帯']) sitArr.push(`「${selectedData['時間帯']}」`);
+        if (selectedData['天気']) sitArr.push(`「${selectedData['天気']}」の`);
+        if (selectedData['雰囲気']) sitArr.push(`「${selectedData['雰囲気']}」な`);
+        situationPart = sitArr.join('') ? sitArr.join('') + '、' : '';
+    }
+
+    // キャラクター部分の接続語構築
+    let fashionPart = selectedData['服装'] ? `「${selectedData['服装']}」を身に着けている` : '';
+    let itemPart = selectedData['小物'] ? `「${selectedData['小物']}」を持った` : '';
+    let haircolorPart = selectedData['髪の色'] ? `「${selectedData['髪の色']}」の` : '';
+    let hairstylePart = selectedData['髪型'] ? `「${selectedData['髪型']}」の` : '';
+    let eyecolorPart = selectedData['目の色'] ? `「${selectedData['目の色']}」の目の、` : '';
+    let expressionPart = selectedData['表情'] ? `「${selectedData['表情']}」顔をしてる` : '';
+    let posePart = selectedData['ポーズ'] ? `「${selectedData['ポーズ']}」いる` : '';
+    let agePart = selectedData['年代'] ? `「${selectedData['年代']}」くらいの` : '';
+    let genderPart = selectedData['性別'] ? `「${selectedData['性別']}」の` : '';
+
+    // 本文結合
+    resultSentence = `${situationPart}${fashionPart}${itemPart}${haircolorPart}${hairstylePart}${eyecolorPart}${expressionPart}${posePart}${agePart}${genderPart}子を描こう！`;
+
+    // 【テーマカラー、花を選んだ時】 ➔ 文末に添える
+    const extraSupplements = [];
+    if (selectedData['テーマカラー']) extraSupplements.push(`テーマカラー: ${selectedData['テーマカラー']}`);
+    if (selectedData['花']) extraSupplements.push(`モチーフ: ${selectedData['花']}`);
+
+    if (extraSupplements.length > 0) {
+        resultSentence += ` （${extraSupplements.join(' / ')}）`;
+    }
+
+    currentGeneratedPrompt = resultSentence;
+    document.getElementById('promptText').innerHTML = resultSentence;
+
+    // タググリッド描画
+    renderElementsGrid(selectedData);
+
+    // 保存ボタン表示
+    const btnSave = document.getElementById('btnSavePrompt');
+    const btnSaveText = document.getElementById('btnSaveText');
+    btnSave.classList.remove('hidden');
+    btnSave.disabled = false;
+    btnSaveText.textContent = "このお題を保存する";
+    document.getElementById('saveToast').classList.add('hidden');
+
+    // 検索リンク更新
+    updateSearchLinks(selectedData);
+});
+
+function renderElementsGrid(elements) {
+    const grid = document.getElementById('elementsGrid');
+    grid.innerHTML = '';
+    
+    Object.entries(elements).forEach(([key, val]) => {
+        const tag = document.createElement('div');
+        tag.className = 'p-2 bg-amber-50/80 border border-amber-200 rounded-xl text-xs font-semibold flex flex-col';
+        tag.innerHTML = `<span class="text-[10px] text-amber-700 font-bold uppercase">${key}</span><span class="text-slate-800 font-extrabold truncate">${val}</span>`;
+        grid.appendChild(tag);
+    });
+    grid.classList.remove('hidden');
 }
 
-// 個別抽選
-function generateSingle(key) {
-  if (state.locked[key]) {
-    showToast("ロック中の項目は変更されません");
-    return;
-  }
-  const useExclusion = document.getElementById("exclusionToggle").checked;
-  let attempts = 0;
-  let candidate;
+// Safari（Google検索）での検索リンクに更新
+function updateSearchLinks(elements) {
+    const hairText = document.getElementById('hairSearchText');
+    const hairBtn = document.getElementById('hairSearchBtn');
+    const fashionText = document.getElementById('fashionSearchText');
+    const fashionBtn = document.getElementById('fashionSearchBtn');
 
-  do {
-    candidate = getRandomItem(MASTER_DATA[key], state.current[key]);
-    attempts++;
-  } while (
-    useExclusion &&
-    isContradictory({ ...state.current, [key]: candidate }) &&
-    attempts < 15
-  );
+    const hairQuery = [elements["性別"], elements["髪型"]].filter(Boolean).join(" ");
+    if (hairQuery) {
+        hairText.textContent = `『${hairQuery}』を検索`;
+        hairBtn.href = `https://www.google.com/search?q=${encodeURIComponent(hairQuery + ' 髪型')}`;
+    }
 
-  state.current[key] = candidate;
-  renderSingle(key);
+    const fashionQuery = [elements["性別"], elements["服装"]].filter(Boolean).join(" ");
+    if (fashionQuery) {
+        fashionText.textContent = `『${fashionQuery}』を検索`;
+        fashionBtn.href = `https://www.google.com/search?q=${encodeURIComponent(fashionQuery + ' 服装')}`;
+    }
 }
 
-// 画面描画（全体）
-function renderAll() {
-  Object.keys(MASTER_DATA).forEach((key) => {
-    renderSingle(key);
-  });
+/* ==========================================
+   ストック管理
+========================================== */
+let stocks = JSON.parse(localStorage.getItem('ODP_PROMPT_STOCKS') || '[]');
+
+document.getElementById('btnSavePrompt').addEventListener('click', () => {
+    const btnSave = document.getElementById('btnSavePrompt');
+    const btnSaveText = document.getElementById('btnSaveText');
+    const saveToast = document.getElementById('saveToast');
+
+    if (currentGeneratedPrompt && !stocks.includes(currentGeneratedPrompt)) {
+        stocks.push(currentGeneratedPrompt);
+        localStorage.setItem('ODP_PROMPT_STOCKS', JSON.stringify(stocks));
+        
+        btnSaveText.textContent = "✅ 保存済み";
+        btnSave.disabled = true;
+
+        saveToast.classList.remove('hidden');
+        setTimeout(() => {
+            saveToast.classList.add('hidden');
+        }, 3000);
+    }
+});
+
+const stockModal = document.getElementById('stockModal');
+document.getElementById('btnOpenStock').addEventListener('click', () => {
+    renderStocks();
+    stockModal.classList.remove('hidden');
+});
+document.getElementById('btnCloseStock').addEventListener('click', () => {
+    stockModal.classList.add('hidden');
+});
+
+function renderStocks() {
+    const list = document.getElementById('stockList');
+    if (stocks.length === 0) {
+        list.innerHTML = '<p class="text-xs text-slate-400 py-8 text-center font-semibold">保存されたお題はありません。</p>';
+        return;
+    }
+    list.innerHTML = stocks.map((item, idx) => `
+        <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex justify-between items-center gap-2">
+            <p class="font-bold text-xs text-slate-700 flex-1 leading-relaxed">${item}</p>
+            <button onclick="copyStock(${idx}, this)" class="text-slate-600 hover:text-amber-600 text-xs px-2.5 py-1 font-bold transition flex items-center gap-1 rounded bg-white border border-slate-200 shadow-sm">
+                <i class="fa-regular fa-copy"></i> コピー
+            </button>
+            <button onclick="deleteStock(${idx})" class="text-slate-400 hover:text-red-500 text-xs px-2 py-1 font-bold transition">
+                ✕
+            </button>
+        </div>
+    `).join('');
 }
 
-// 画面描画（個別）
-function renderSingle(key) {
-  const valEl = document.getElementById(`val-${key}`);
-  if (valEl) {
-    valEl.textContent = state.current[key] || "---";
-  }
-
-  // Safari検索リンクの更新（髪型・服装）
-  if (key === "hairstyle") {
-    updateSafariSearchLink("searchHairBtn", state.current.hairstyle, "髪型 イラスト 資料");
-  }
-  if (key === "fashion") {
-    updateSafariSearchLink("searchFashionBtn", state.current.fashion, "服装 イラスト 資料");
-  }
-}
-
-// Safari（Google検索）URLを生成してリンクに反映
-function updateSafariSearchLink(elementId, keyword, suffix) {
-  const btn = document.getElementById(elementId);
-  if (!btn || !keyword) return;
-  // 記号などを整理して検索しやすいクエリを作成
-  const cleanWord = keyword.replace(/×/g, " ");
-  const query = encodeURIComponent(`${cleanWord} ${suffix}`);
-  btn.href = `https://www.google.com/search?q=${query}&tbm=isch`;
-}
-
-// ロック切り替え
-function toggleLock(key) {
-  state.locked[key] = !state.locked[key];
-  const card = document.querySelector(`.topic-card[data-key="${key}"]`);
-  const lockBtn = card.querySelector(".lock-btn");
-
-  if (state.locked[key]) {
-    card.classList.add("locked");
-    lockBtn.textContent = "🔒";
-  } else {
-    card.classList.remove("locked");
-    lockBtn.textContent = "🔓";
-  }
-}
-
-// テキスト整形
-function formatPromptText(topicObj) {
-  return Object.keys(CATEGORY_LABELS)
-    .map((key) => `【${CATEGORY_LABELS[key]}】${topicObj[key] || "---"}`)
-    .join("\n");
-}
-
-// クリップボードコピー（iOS Safariフォールバック対応）
-async function copyToClipboard(text) {
-  try {
+window.copyStock = function(idx, btnEl) {
+    const textToCopy = stocks[idx];
+    
+    // iOS Safari対応クリップボードコピー処理
     if (navigator.clipboard && window.isSecureContext) {
-      await navigator.clipboard.writeText(text);
-      showToast("お題をコピーしました！");
-      return;
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            showCopySuccess(btnEl);
+        }).catch(() => {
+            fallbackCopyTextToClipboard(textToCopy, btnEl);
+        });
+    } else {
+        fallbackCopyTextToClipboard(textToCopy, btnEl);
     }
-  } catch (err) {
-    // フォールバックへ
-  }
-
-  const textArea = document.createElement("textarea");
-  textArea.value = text;
-  textArea.style.position = "fixed";
-  textArea.style.left = "-9999px";
-  document.body.appendChild(textArea);
-  textArea.focus();
-  textArea.select();
-
-  try {
-    document.execCommand("copy");
-    showToast("お題をコピーしました！");
-  } catch (err) {
-    showToast("コピーに失敗しました");
-  }
-  document.body.removeChild(textArea);
-}
-
-// ストック保存・読み込み
-function loadStocks() {
-  try {
-    const saved = localStorage.getItem("odp_stocks_v1");
-    if (saved) {
-      state.stocks = JSON.parse(saved);
-    }
-  } catch (e) {
-    state.stocks = [];
-  }
-  updateStockBadge();
-}
-
-function saveCurrentToStock() {
-  const newItem = {
-    id: Date.now(),
-    date: new Date().toLocaleString("ja-JP", {
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit"
-    }),
-    data: { ...state.current }
-  };
-  state.stocks.unshift(newItem);
-  localStorage.setItem("odp_stocks_v1", JSON.stringify(state.stocks));
-  updateStockBadge();
-  showToast("ストックに保存しました！");
-}
-
-function deleteStock(id) {
-  state.stocks = state.stocks.filter((item) => item.id !== id);
-  localStorage.setItem("odp_stocks_v1", JSON.stringify(state.stocks));
-  updateStockBadge();
-  renderStockList();
-}
-
-function restoreStock(id) {
-  const target = state.stocks.find((item) => item.id === id);
-  if (!target) return;
-  state.current = { ...target.data };
-  renderAll();
-  document.getElementById("stockModal").classList.add("hidden");
-  showToast("ストックから復元しました！");
-}
-
-function updateStockBadge() {
-  document.getElementById("stockCountBadge").textContent = state.stocks.length;
-}
-
-function renderStockList() {
-  const listEl = document.getElementById("stockList");
-  if (state.stocks.length === 0) {
-    listEl.innerHTML = `<p class="empty-msg">まだストックされたお題はありません。</p>`;
-    return;
-  }
-
-  listEl.innerHTML = state.stocks
-    .map(
-      (item) => `
-      <div class="stock-item">
-        <div class="stock-item-header">
-          <span>保存日時: ${item.date}</span>
-          <button class="icon-btn" onclick="deleteStock(${item.id})" title="削除">🗑️</button>
-        </div>
-        <div class="stock-item-body">
-          <strong>${item.data.gender} / ${item.data.fashion}</strong><br>
-          髪型: ${item.data.hairstyle}（${item.data.haircolor}）<br>
-          場所: ${item.data.location} / テーマ: ${item.data.theme}
-        </div>
-        <div class="stock-item-actions">
-          <button class="btn-secondary" onclick="restoreStock(${item.id})">🔄 画面に復元</button>
-          <button class="btn-ghost" onclick="copyStockItem(${item.id})">📋 コピー</button>
-        </div>
-      </div>
-    `
-    )
-    .join("");
-}
-
-window.copyStockItem = function (id) {
-  const target = state.stocks.find((item) => item.id === id);
-  if (target) {
-    copyToClipboard(formatPromptText(target.data));
-  }
 };
-window.deleteStock = deleteStock;
-window.restoreStock = restoreStock;
 
-// トースト通知
-let toastTimer = null;
-function showToast(msg) {
-  const toast = document.getElementById("toast");
-  toast.textContent = msg;
-  toast.classList.remove("hidden");
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => {
-    toast.classList.add("hidden");
-  }, 2200);
+function fallbackCopyTextToClipboard(text, btnEl) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed";
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.opacity = "0";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+        document.execCommand('copy');
+        showCopySuccess(btnEl);
+    } catch (err) {
+        console.error('コピー失敗:', err);
+    }
+    document.body.removeChild(textArea);
 }
 
-// ワンドロタイマー機能
-let timerSeconds = 60 * 60;
-let defaultMinutes = 60;
-let timerInterval = null;
-let isRunning = false;
+function showCopySuccess(btnEl) {
+    const originalText = btnEl.innerHTML;
+    btnEl.innerHTML = '<i class="fa-solid fa-check text-emerald-600"></i> 完了';
+    setTimeout(() => {
+        btnEl.innerHTML = originalText;
+    }, 1500);
+}
+
+window.deleteStock = function(idx) {
+    stocks.splice(idx, 1);
+    localStorage.setItem('ODP_PROMPT_STOCKS', JSON.stringify(stocks));
+    renderStocks();
+};
+
+/* ==========================================
+   ワンドロタイマー
+========================================== */
+let timerInterval;
+let timeLeft = 0;
+
+window.setTimer = function(minutes) {
+    clearInterval(timerInterval);
+    timeLeft = minutes * 60;
+    updateTimerDisplay();
+    timerInterval = setInterval(() => {
+        if (timeLeft > 0) {
+            timeLeft--;
+            updateTimerDisplay();
+        } else {
+            clearInterval(timerInterval);
+            alert(`⏰ ${minutes}分が経過しました！お疲れ様でした！`);
+        }
+    }, 1000);
+};
+
+document.getElementById('btnTimerReset').addEventListener('click', () => {
+    clearInterval(timerInterval);
+    timeLeft = 0;
+    updateTimerDisplay();
+});
 
 function updateTimerDisplay() {
-  const mins = Math.floor(timerSeconds / 60);
-  const secs = timerSeconds % 60;
-  document.getElementById("timerDisplay").textContent =
-    `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+    const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+    const s = (timeLeft % 60).toString().padStart(2, '0');
+    document.getElementById('timerDisplay').textContent = `${m}:${s}`;
 }
 
-function toggleTimer() {
-  const startBtn = document.getElementById("timerStartBtn");
-  if (isRunning) {
-    clearInterval(timerInterval);
-    isRunning = false;
-    startBtn.textContent = "再開";
-  } else {
-    if (timerSeconds <= 0) {
-      timerSeconds = defaultMinutes * 60;
+/* ==========================================
+   背景：Canvas 軌道描画 (淡い黄色の軌道ライン)
+========================================== */
+const canvas = document.getElementById('cosmicCanvas');
+const ctx = canvas.getContext('2d');
+
+function resizeCanvas() {
+    canvas.width = canvas.parentElement.clientWidth;
+    canvas.height = canvas.parentElement.clientHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+let angle = 0;
+function drawOrbitalCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    const centerX = canvas.width * 0.85;
+    const centerY = canvas.height * 0.25;
+    
+    ctx.save();
+    ctx.translate(centerX, centerY);
+    
+    ctx.strokeStyle = '#f59e0b';
+    ctx.lineWidth = 1.5;
+    ctx.globalAlpha = 0.2;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 200, 80, angle * 0.2, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.strokeStyle = '#fcd34d';
+    ctx.lineWidth = 1;
+    ctx.globalAlpha = 0.25;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 290, 120, -angle * 0.1, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.fillStyle = '#f59e0b';
+    ctx.globalAlpha = 0.4;
+    for (let i = 0; i < 12; i++) {
+        const rad = (i * 30 + angle * 20) * (Math.PI / 180);
+        const x = Math.cos(rad) * 200;
+        const y = Math.sin(rad) * 80;
+        ctx.beginPath();
+        ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+        ctx.fill();
     }
-    isRunning = true;
-    startBtn.textContent = "一時停止";
-    timerInterval = setInterval(() => {
-      timerSeconds--;
-      updateTimerDisplay();
-      if (timerSeconds <= 0) {
-        clearInterval(timerInterval);
-        isRunning = false;
-        startBtn.textContent = "スタート";
-        showToast("⏰ お疲れ様でした！時間終了です！");
-      }
-    }, 1000);
-  }
+
+    ctx.restore();
+
+    angle += 0.004;
+    requestAnimationFrame(drawOrbitalCanvas);
 }
-
-function resetTimer() {
-  clearInterval(timerInterval);
-  isRunning = false;
-  timerSeconds = defaultMinutes * 60;
-  document.getElementById("timerStartBtn").textContent = "スタート";
-  updateTimerDisplay();
-}
-
-// イベントリスナー登録
-function setupEventListeners() {
-  document.getElementById("generateAllBtn").addEventListener("click", generateAll);
-
-  document.getElementById("copyAllBtn").addEventListener("click", () => {
-    copyToClipboard(formatPromptText(state.current));
-  });
-
-  document.getElementById("saveStockBtn").addEventListener("click", saveCurrentToStock);
-
-  // 各カードのロック・個別再抽選
-  document.querySelectorAll(".topic-card").forEach((card) => {
-    const key = card.dataset.key;
-    card.querySelector(".lock-btn").addEventListener("click", () => toggleLock(key));
-    card.querySelector(".reroll-btn").addEventListener("click", () => generateSingle(key));
-  });
-
-  // ストックモーダル開閉
-  document.getElementById("stockToggleBtn").addEventListener("click", () => {
-    renderStockList();
-    document.getElementById("stockModal").classList.remove("hidden");
-  });
-
-  document.getElementById("closeStockBtn").addEventListener("click", () => {
-    document.getElementById("stockModal").classList.add("hidden");
-  });
-
-  document.getElementById("stockModal").addEventListener("click", (e) => {
-    if (e.target.id === "stockModal") {
-      document.getElementById("stockModal").classList.add("hidden");
-    }
-  });
-
-  // タイマー操作
-  document.getElementById("timerStartBtn").addEventListener("click", toggleTimer);
-  document.getElementById("timerResetBtn").addEventListener("click", resetTimer);
-
-  document.querySelectorAll(".preset-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".preset-btn").forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
-      defaultMinutes = parseInt(btn.dataset.min, 10);
-      resetTimer();
-    });
-  });
-}
+drawOrbitalCanvas();
